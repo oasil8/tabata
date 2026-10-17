@@ -12,6 +12,12 @@
   box-sizing: border-box;
 }
 
+html {
+  /* 더블탭 확대 방지 */
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
 }
@@ -495,6 +501,7 @@ input {
 
 textarea {
   font: inherit;
+  font-size: 16px; /* 16px 미만이면 iOS가 입력 시 자동 확대 */
   min-height: 110px;
   resize: vertical;
   border: 1px solid #444;

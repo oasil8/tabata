@@ -295,3 +295,5 @@ if ('serviceWorker' in navigator) {
     registration.addEventListener('updatefound', watchInstall);
   }).catch(offlineFailed);
 }
+// iOS는 user-scalable=no를 무시하므로 핀치 확대를 직접 막는다.
+document.addEventListener('gesturestart', event => event.preventDefault());

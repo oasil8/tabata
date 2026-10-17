@@ -18,7 +18,7 @@ Node.js 22 이상에서 의존성 설치 없이 테스트합니다.
 node --test tests/
 ```
 
-아이콘 재생성: `node icons/generate.mjs` (Node 내장 zlib만 사용).
+아이콘 원본: `icons/icon.svg`. PNG(180/192/512)는 이 SVG를 Chrome 헤드리스 스크린샷으로 렌더링해 만듭니다.
 
 ## GitHub Pages 배포
 
