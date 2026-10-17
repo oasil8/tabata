@@ -7,7 +7,7 @@ test('서비스워커 필수 캐시 파일과 운동 DB 포함, 원격 이미지
   let files;
   const events = {};
   vm.runInNewContext(readFileSync(new URL('sw.js', root), 'utf8'), {
-    self: { registration: { scope: 'https://example.test/tabata-app/' }, addEventListener: (name, handler) => { events[name] = handler; } },
+    self: { registration: { scope: 'https://example.test/tabata-app/' }, skipWaiting: async () => {}, addEventListener: (name, handler) => { events[name] = handler; } },
     caches: { open: async () => ({ addAll: async list => { files = list; } }) },
   });
   return new Promise((resolve, reject) => events.install({ waitUntil: promise => promise.then(() => {

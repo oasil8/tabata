@@ -1,5 +1,5 @@
 const PREFIX = `tabata-${self.registration.scope}-`;
-const CACHE = `${PREFIX}v17`;
+const CACHE = `${PREFIX}v19`;
 const FILES = [
   './', './index.html', './styles.css', './app.js', './segments.js', './store.js', './audio-render.js',
   './memo.js', './exercise-display.js', './audio-cache.js', './data/exercises.json',
@@ -7,8 +7,8 @@ const FILES = [
   ...['prepare', 'work', 'rest', 'cycle_rest', 'cooldown', 'done', 'three', 'two', 'one'].map(key => `./audio/${key}.wav`),
 ];
 self.addEventListener('install', event => {
-  // 운동 중 버전을 바꾸지 않는다. 기존 탭을 모두 닫으면 새 버전이 활성화된다.
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
+  // 새 버전을 바로 활성화한다. 화면 새로고침 시점은 app.js가 운동 중이 아닐 때로 고른다.
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(PREFIX) && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));

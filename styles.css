@@ -155,19 +155,6 @@ h1 {
   white-space: nowrap;
 }
 
-.progress-track {
-  height: 4px;
-  background: #7774;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-#progress {
-  height: 100%;
-  width: 0;
-  background: currentColor;
-}
-
 .next-segment {
   display: flex;
   align-items: center;
@@ -860,4 +847,8 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 
 .notice-list li + li {
   margin-top: 10px;
+}
+
+.sheet:focus {
+  outline: none;
 }

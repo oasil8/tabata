@@ -101,14 +101,6 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
     }
     target.append(link('유튜브에서 자세히 보기', `https://www.youtube.com/results?search_query=${encodeURIComponent((item.en || item.ko) + ' form')}`));
     if (custom && item.videoUrl) target.append(link('저장한 영상 보기', item.videoUrl));
-    if (!custom && editable) {
-      target.append(button(getData().hiddenExerciseIds.includes(id) ? '숨김 해제' : '목록에서 숨기기', () => {
-        const data = getData();
-        data.hiddenExerciseIds = data.hiddenExerciseIds.includes(id)
-          ? data.hiddenExerciseIds.filter(value => value !== id) : [...data.hiddenExerciseIds, id];
-        commit(); render();
-      }));
-    }
   }
   function showDetail(id) {
     detail.replaceChildren(button('닫기', () => detail.close()));
@@ -167,8 +159,7 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
     function resultsFor() {
       const query = search.value.trim().toLocaleLowerCase();
       const candidates = category === '내 종목' ? getData().customExercises : all();
-      const matches = candidates.filter(item => !getData().hiddenExerciseIds.includes(item.id)
-        && (category === '전체' || category === '내 종목'
+      const matches = candidates.filter(item => (category === '전체' || category === '내 종목'
           || (['케틀벨', '불가리안백'].includes(category) ? item.equipment === category : item.category === category))
         && `${item.ko} ${item.en || ''}`.toLocaleLowerCase().includes(query));
       results.replaceChildren();
@@ -289,15 +280,6 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
       }]])));
       row.append(el('h2', item.ko), actions); view.append(row);
     }
-    view.append(el('h2', '숨긴 DB 종목'));
-    for (const id of getData().hiddenExerciseIds) {
-      const row = el('div', undefined, 'search-result');
-      row.append(el('span', find(id)?.ko || id), button('숨김 해제', () => {
-        getData().hiddenExerciseIds = getData().hiddenExerciseIds.filter(value => value !== id);
-        commit(); render();
-      }));
-      view.append(row);
-    }
   }
   function render() {
     view.replaceChildren();
@@ -323,7 +305,7 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
         '루틴과 메모는 이 폰에만 저장돼요. 홈 화면 아이콘을 지우거나 사파리의 방문 기록·웹사이트 데이터를 지우면 모두 사라져요.',
         '그래서 앱을 지우기 전이나 폰을 바꾸기 전에는 꼭 타이머 → 편집 → 백업 → 내보내기로 백업 파일을 저장해 두세요. 가끔 미리 해두면 더 안전해요.',
         '다시 설치했거나 새 폰이라면 편집 → 백업 → 가져오기에서 백업 파일을 고르면 그대로 돌아와요.',
-        '업데이트는 따로 설치할 필요가 없어요. 인터넷이 연결된 상태에서 앱을 완전히 닫았다가(앱 전환 화면에서 위로 밀기) 다시 열면 새 버전이 적용돼요. 바로 안 바뀌면 한 번 더 닫았다 열어 주세요.',
+        '업데이트는 따로 설치할 필요가 없어요. 인터넷이 연결된 상태에서 앱을 완전히 닫았다가(앱 전환 화면에서 위로 밀기) 다시 열면 새 버전이 적용돼요. 운동 중이 아닐 때 앱을 다시 열면 자동으로 새 버전이 적용돼요.',
         '항상 홈 화면 아이콘으로 실행하세요. 사파리 탭에서 쓰면 한동안 안 열었을 때 데이터가 지워질 수 있어요.',
         '처음 한 번만 인터넷이 필요하고 그 뒤로는 오프라인에서도 동작해요. 종목 이미지는 인터넷이 있을 때만 보여요.',
       ]) notes.append(el('li', text));

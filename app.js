@@ -32,8 +32,10 @@ function syncSheets() {
 }
 function showSheet(dialog) {
   if (!dialog.open) dialog.show();
-  // show()가 첫 버튼(취소)에 자동 포커스해 노란 테두리가 생기므로 비운다.
-  document.activeElement?.blur();
+  // show()가 첫 버튼(취소)에 자동 포커스해 노란 테두리가 생기므로, 창 자체에 포커스를 둔다.
+  // (blur만 하면 iOS에서 포커스가 다시 첫 버튼으로 가는 경우가 있다.)
+  dialog.tabIndex = -1;
+  dialog.focus({ preventScroll: true });
   dialog.scrollTop = 0;
   syncSheets();
 }
@@ -137,7 +139,6 @@ function draw() {
     renderNextSegment(position, routine);
     $('timer-hint').textContent = routine ? '' : '편집에서 새 타이머를 추가해 주세요.';
   }
-  $('progress').style.width = `${totalDuration(segments) ? Math.min(100, time / totalDuration(segments) * 100) : 0}%`;
 }
 function animate() {
   cancelAnimationFrame(frame);
@@ -382,7 +383,22 @@ if ('serviceWorker' in navigator) {
     };
     watchInstall();
     registration.addEventListener('updatefound', watchInstall);
+    // 홈 화면 앱은 닫아도 다시 '이어서' 열리는 경우가 많아, 화면에 돌아올 때마다 새 버전을 확인한다.
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) registration.update().catch(() => {}); });
   }).catch(offlineFailed);
+  // 새 버전이 활성화되면 운동 중이 아니고 열린 창이 없을 때 새로고침해 바로 적용한다.
+  const isUpdate = !!navigator.serviceWorker.controller;
+  let reloadPending = false;
+  const reloadIfIdle = () => {
+    if (reloadPending && audio.paused && !document.querySelector('dialog[open]')) location.reload();
+  };
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!isUpdate) return;
+    reloadPending = true;
+    reloadIfIdle();
+  });
+  audio.addEventListener('ended', reloadIfIdle);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) reloadIfIdle(); });
 }
 // iOS는 user-scalable=no를 무시하므로 핀치 확대를 직접 막는다.
 document.addEventListener('gesturestart', event => event.preventDefault());

@@ -56,7 +56,8 @@ test('장비·내 종목 필터와 공통 만들기 버튼', async () => {
     assert.equal(descendants(nodes['custom-editor']).find(node => node.tag === 'input').value, '없는 종목');
     click(nodes['custom-editor'], '취소');
     search.value = 'SPIN'; click(view, '전체'); assert.deepEqual(names(), ['백 스핀']);
-    data.hiddenExerciseIds.push('bag'); click(view, '불가리안백'); assert.deepEqual(names(), []);
+    // 숨기기 기능은 없앴으므로 예전에 숨긴 종목도 다시 검색된다.
+    data.hiddenExerciseIds.push('bag'); click(view, '불가리안백'); assert.deepEqual(names(), ['백 스핀']);
     click(view, '‹ 루틴 목록'); click(view, '내 종목 관리');
     assert.equal(descendants(view).find(node => node.textContent === '＋ 내 종목 만들기').className, 'direct-add');
     memo.home();
@@ -102,8 +103,7 @@ test('메모 목록 → 항목 상세, 자동 저장, 이동·삭제와 이미�
     assert.ok(descendants(view).some(node => node.textContent === '이미지는 인터넷 연결 시에만 보여요'));
     img.events.error();
     assert.ok(descendants(view).some(node => node.textContent === '인터넷에 연결되면 이미지가 표시돼요'));
-    click(view, '목록에서 숨기기'); assert.ok(data.hiddenExerciseIds.includes(entry.exerciseId));
-    click(view, '숨김 해제'); assert.ok(!data.hiddenExerciseIds.includes(entry.exerciseId));
+    assert.ok(!descendants(view).some(node => node.textContent === '목록에서 숨기기'));
     memo.showDetail(entry.exerciseId);
     assert.ok(descendants(nodes['exercise-detail']).some(node => node.tag === 'img'));
     assert.equal(descendants(nodes['exercise-detail']).filter(node => node.tag === 'button').length, 1, '타이머 시트는 닫기만 허용');
