@@ -1,5 +1,5 @@
 const PREFIX = `tabata-${self.registration.scope}-`;
-const CACHE = `${PREFIX}v16`;
+const CACHE = `${PREFIX}v17`;
 const FILES = [
   './', './index.html', './styles.css', './app.js', './segments.js', './store.js', './audio-render.js',
   './memo.js', './exercise-display.js', './audio-cache.js', './data/exercises.json',

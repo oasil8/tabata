@@ -99,7 +99,7 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
       for (const line of lines) list.append(el('li', line));
       target.append(list);
     }
-    target.append(link('유튜브에서 자세 보기', `https://www.youtube.com/results?search_query=${encodeURIComponent((item.en || item.ko) + ' form')}`));
+    target.append(link('유튜브에서 자세히 보기', `https://www.youtube.com/results?search_query=${encodeURIComponent((item.en || item.ko) + ' form')}`));
     if (custom && item.videoUrl) target.append(link('저장한 영상 보기', item.videoUrl));
     if (!custom && editable) {
       target.append(button(getData().hiddenExerciseIds.includes(id) ? '숨김 해제' : '목록에서 숨기기', () => {
@@ -234,7 +234,7 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
     const description = el('section', undefined, 'exercise-description');
     renderDescription(description, entry.exerciseId, true);
     if (!find(entry.exerciseId)) {
-      description.append(link('유튜브에서 자세 보기', `https://www.youtube.com/results?search_query=${encodeURIComponent(entry.name + ' form')}`));
+      description.append(link('유튜브에서 자세히 보기', `https://www.youtube.com/results?search_query=${encodeURIComponent(entry.name + ' form')}`));
       if (entry.exerciseId === null) description.append(button('내 종목으로 설명 만들기', () => editCustom(null, entry.name, item => {
         entry.exerciseId = item.id; commit();
       })));
@@ -325,7 +325,6 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
         '다시 설치했거나 새 폰이라면 편집 → 백업 → 가져오기에서 백업 파일을 고르면 그대로 돌아와요.',
         '업데이트는 따로 설치할 필요가 없어요. 인터넷이 연결된 상태에서 앱을 완전히 닫았다가(앱 전환 화면에서 위로 밀기) 다시 열면 새 버전이 적용돼요. 바로 안 바뀌면 한 번 더 닫았다 열어 주세요.',
         '항상 홈 화면 아이콘으로 실행하세요. 사파리 탭에서 쓰면 한동안 안 열었을 때 데이터가 지워질 수 있어요.',
-        '소리가 안 나면 무음 스위치와 볼륨을 확인하세요. 화면을 꺼도 안내 음성은 계속 나오고, 틀어둔 음악은 멈춰요.',
         '처음 한 번만 인터넷이 필요하고 그 뒤로는 오프라인에서도 동작해요. 종목 이미지는 인터넷이 있을 때만 보여요.',
       ]) notes.append(el('li', text));
       info.append(el('h2', '꼭 알아두세요'), notes);
