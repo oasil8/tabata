@@ -678,6 +678,11 @@ textarea:focus-visible, a:focus-visible {
   flex-direction: column;
 }
 
+.choice-dialog .current {
+  border: 2px solid var(--yellow);
+  color: var(--yellow);
+}
+
 @media (max-width: 420px) {
   #message {
     font-size: 11px;

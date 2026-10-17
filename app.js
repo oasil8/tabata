@@ -1,6 +1,7 @@
 import { buildSegments, totalDuration, positionAt } from './segments.js';
 import { defaults, fields, loadData, saveData, validateData, validateRoutine, mergeData } from './store.js';
 import { renderWorkout, silenceURL, sampleRateFor } from './audio-render.js';
+import { audioKey, selectAudio, finishAudio } from './audio-cache.js';
 import { exerciseFor } from './exercise-display.js';
 import { createMemo } from './memo.js';
 
@@ -10,10 +11,11 @@ const format = seconds => `${String(Math.floor(seconds / 60)).padStart(2, '0')}:
 const loaded = loadData();
 let data = loaded.data;
 let segments = [];
-let readyURL = null;
-let generation = 0;
-let rendering = false;
+let cache = { key: null, version: 0, url: null };
+let started = false;
+let pendingStart = false;
 let renderInFlight = false;
+let renderScheduled = false;
 let wakeLock = null;
 let editingId = null;
 let frame = 0;
@@ -50,13 +52,11 @@ function mediaState() {
   if ('mediaSession' in navigator) navigator.mediaSession.playbackState = audio.paused ? 'paused' : 'playing';
 }
 function reset() {
-  generation++;
-  rendering = false;
+  pendingStart = false;
+  started = false;
   audio.pause();
-  audio.removeAttribute('src');
-  audio.load();
-  if (readyURL) URL.revokeObjectURL(readyURL);
-  readyURL = null;
+  audio.loop = false;
+  audio.currentTime = 0;
   releaseWakeLock();
   lastDisplay = '';
   draw();
@@ -65,6 +65,14 @@ function selectRoutine() {
   reset();
   const routine = selected();
   segments = routine ? buildSegments(routine) : [];
+  const nextCache = selectAudio(cache, audioKey(routine));
+  if (nextCache !== cache) {
+    audio.removeAttribute('src');
+    audio.load();
+    if (cache.url) URL.revokeObjectURL(cache.url);
+    cache = nextCache;
+  }
+  scheduleRender();
   $('routine-title').textContent = routine?.name || '나의 첫 타이머';
   $('total-time').textContent = format(totalDuration(segments));
   if ('mediaSession' in navigator && 'MediaMetadata' in globalThis) {
@@ -88,25 +96,25 @@ function renderNextSegment(position, routine) {
 }
 function draw() {
   const routine = selected();
-  const time = readyURL ? audio.currentTime : 0;
+  const time = started ? audio.currentTime : 0;
   const position = positionAt(segments, time);
   const current = segments[position.index];
   const type = routine && position.done ? 'done' : current?.type || 'prepare';
-  const key = `${position.index}:${position.remaining}:${audio.paused}:${rendering}:${renderInFlight}:${!!routine}`;
+  const key = `${position.index}:${position.remaining}:${audio.paused}:${started}:${!!routine}`;
   if (lastDisplay !== key) {
     lastDisplay = key;
     $('phase').textContent = routine ? labels[type] : '루틴을 추가하세요';
     $('remaining').textContent = format(position.remaining);
     $('clock-panel').dataset.phase = type;
-    $('play-state').textContent = rendering ? '오디오 준비 중' : position.done && routine ? '수고하셨습니다' : !audio.paused && readyURL ? '진행 중' : readyURL ? '일시정지' : '시작할 준비';
-    $('play-button').textContent = rendering ? '준비 중' : position.done && readyURL && audio.paused ? '다시 시작' : !audio.paused && readyURL ? '일시정지' : readyURL ? '재개' : '시작';
-    $('play-button').disabled = !routine || renderInFlight;
+    $('play-state').textContent = position.done && routine ? '수고하셨습니다' : started ? (audio.paused ? '일시정지' : '진행 중') : '시작할 준비';
+    $('play-button').textContent = position.done && started && audio.paused ? '다시 시작' : started ? (audio.paused ? '재개' : '일시정지') : '시작';
+    $('play-button').disabled = !routine;
     const rounds = !routine || position.done || type === 'cooldown' ? 0 : type === 'cycle_rest' ? routine.rounds : current?.round ? routine.rounds - current.round + (type === 'work' ? 1 : 0) : routine.rounds;
     const cycles = !routine || position.done || type === 'cooldown' ? 0 : current?.cycle ? routine.cycles - current.cycle + (type === 'cycle_rest' ? 0 : 1) : routine.cycles;
     $('rounds-left').textContent = rounds;
     $('cycles-left').textContent = cycles;
     renderNextSegment(position, routine);
-    $('timer-hint').textContent = routine ? '시작하면 운동 전체의 안내 음성을 준비합니다.' : '편집에서 새 타이머를 추가해 주세요.';
+    $('timer-hint').textContent = routine ? '' : '편집에서 새 타이머를 추가해 주세요.';
   }
   $('progress').style.width = `${totalDuration(segments) ? Math.min(100, time / totalDuration(segments) * 100) : 0}%`;
 }
@@ -115,52 +123,74 @@ function animate() {
   draw();
   if (!audio.paused && !document.hidden) frame = requestAnimationFrame(animate);
 }
-function pause() { audio.pause(); }
+function pause() { pendingStart = false; audio.pause(); }
 async function resume() {
-  if (!readyURL || rendering) return;
+  if (!cache.url || pendingStart) return;
+  if (!started || audio.currentTime >= totalDuration(segments)) {
+    if (audio.getAttribute('src') !== cache.url) audio.src = cache.url;
+    audio.currentTime = 0;
+  }
+  audio.loop = false;
+  started = true;
   try { await audio.play(); message(''); }
   catch { message('재생이 제한되었습니다. 재개 버튼을 다시 눌러 주세요.'); }
+  draw();
 }
-async function togglePlay() {
-  if (renderInFlight || !selected()) return;
-  if (readyURL) {
-    if (!audio.paused) { pause(); return; }
-    if (audio.currentTime < totalDuration(segments)) { await resume(); return; }
-    reset();
+function scheduleRender() {
+  if (renderScheduled || renderInFlight || cache.url || !cache.key) return;
+  renderScheduled = true;
+  const run = () => { renderScheduled = false; prepareAudio(); };
+  if ('requestIdleCallback' in globalThis) requestIdleCallback(run, { timeout: 1000 });
+  else setTimeout(run, 0);
+}
+async function prepareAudio() {
+  if (renderInFlight) return;
+  renderInFlight = true;
+  try {
+    while (cache.key && !cache.url) {
+      const version = cache.version;
+      try {
+        const url = await renderWorkout(segments);
+        const result = finishAudio(cache, version, url);
+        cache = result.cache;
+        if (result.revoke) URL.revokeObjectURL(result.revoke);
+      } catch (error) {
+        if (version !== cache.version) continue;
+        reset();
+        message(error.message || '오디오를 만들지 못했습니다. 루틴 길이를 줄여 다시 시도하세요.');
+        break;
+      }
+    }
+  } finally {
+    renderInFlight = false;
   }
+  if (pendingStart && cache.url) {
+    pendingStart = false;
+    audio.pause();
+    await resume();
+  }
+}
+function togglePlay() {
+  if (pendingStart || !selected()) return;
+  if (started && !audio.paused) { pause(); return; }
+  if (cache.url) { resume(); return; }
   try { sampleRateFor(totalDuration(segments)); }
   catch (error) { message(error.message); return; }
-  const token = ++generation;
-  rendering = renderInFlight = true;
-  message('운동 오디오를 준비하고 있습니다. 준비가 끝날 때까지 이 화면을 열어 두세요.');
+  pendingStart = true;
+  message('');
   // iOS 사용자 제스처 안에서 같은 미디어 요소를 먼저 play한다. 소스 교체 후 차단되면 재개 탭으로 복구.
   audio.src = unlockURL;
   audio.loop = true;
-  const unlocked = audio.play().catch(() => {});
+  audio.play().catch(() => {});
+  prepareAudio();
   draw();
-  try {
-    await unlocked;
-    const url = await renderWorkout(segments);
-    if (token !== generation) { URL.revokeObjectURL(url); return; }
-    audio.pause(); audio.loop = false;
-    readyURL = url;
-    audio.src = url;
-    rendering = false;
-    await resume();
-  } catch (error) {
-    if (token === generation) { reset(); message(error.message || '오디오를 만들지 못했습니다. 루틴 길이를 줄여 다시 시도하세요.'); }
-  } finally {
-    renderInFlight = false;
-    if (token === generation) rendering = false;
-    draw();
-  }
 }
 $('play-button').addEventListener('click', togglePlay);
 $('reset-button').addEventListener('click', () => { reset(); message('처음으로 돌아왔습니다.'); });
 audio.addEventListener('play', () => { mediaState(); keepAwake(); animate(); });
 audio.addEventListener('pause', () => { mediaState(); releaseWakeLock(); draw(); });
 audio.addEventListener('ended', () => { releaseWakeLock(); mediaState(); draw(); });
-audio.addEventListener('error', () => { if (readyURL) message('오디오를 재생하지 못했습니다. 리셋 후 다시 시작하세요.'); });
+audio.addEventListener('error', () => { if (started) message('오디오를 재생하지 못했습니다. 리셋 후 다시 시작하세요.'); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { keepAwake(); animate(); } });
 if ('mediaSession' in navigator) {
   for (const [action, handler] of [['play', resume], ['pause', pause], ['stop', reset]]) {
@@ -198,8 +228,11 @@ function choose(title, description, actions, stack = false) {
   $('choice-dialog').classList.toggle('stack', stack);
   $('choice-title').textContent = title;
   $('choice-description').textContent = description;
-  $('choice-actions').replaceChildren(...actions.map(([label, action]) => button(label, () => { $('choice-dialog').close(); action(); })));
+  const buttons = actions.map(([label, action, current]) => button(label, () => { $('choice-dialog').close(); action(); }, current ? 'current' : ''));
+  $('choice-actions').replaceChildren(...buttons);
   $('choice-dialog').showModal();
+  // 포커스 테두리가 선택된 항목과 따로 보이지 않게, 현재 항목에 포커스를 둔다.
+  buttons.find(b => b.classList.contains('current'))?.focus();
 }
 function pickRoutine(id) {
   data.selectedId = id;
@@ -210,7 +243,7 @@ function pickRoutine(id) {
 // 메인 화면의 노란 루틴 이름을 눌러 바로 다른 루틴으로 바꾼다. 운동 중에는 실수로 리셋되지 않게 막는다.
 $('routine-title').addEventListener('click', () => {
   if (!audio.paused || !data.routines.length) return;
-  choose('운동 목록 변경', '', data.routines.map(r => [`${r.id === data.selectedId ? '✓ ' : ''}${r.name}`, () => pickRoutine(r.id)]), true);
+  choose('운동 목록 변경', '', data.routines.map(r => [r.name, () => pickRoutine(r.id), r.id === data.selectedId]), true);
 });
 $('routine-title').addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); $('routine-title').click(); } });
 $('choice-cancel').addEventListener('click', () => $('choice-dialog').close());

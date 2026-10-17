@@ -2,6 +2,8 @@
 import './segments.test.mjs';
 import './store.test.mjs';
 import './audio.test.mjs';
+import './audio-cache.test.mjs';
+import './playback.test.mjs';
 import './assets.test.mjs';
 import './exercise-display.test.mjs';
 import './exercises-db.test.mjs';
