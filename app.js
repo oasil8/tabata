@@ -259,11 +259,22 @@ $('routine-form').addEventListener('submit', event => {
 });
 $('export-button').addEventListener('click', () => {
   memo.flush();
-  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-  const link = document.createElement('a'); link.href = url; link.download = `타바타-백업-${new Date().toISOString().slice(0, 10)}.json`;
-  document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
-  message('백업 파일을 다운로드했습니다.', true);
+  const name = `타바타-백업-${new Date().toISOString().slice(0, 10)}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const download = () => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url; link.download = name;
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    message('백업 파일을 다운로드했습니다.', true);
+  };
+  // 아이폰 홈 화면 앱은 파일 다운로드가 불안정해 공유 창(파일에 저장·카톡·에어드롭)을 우선 쓴다.
+  // share()는 탭 직후 동기적으로 호출해야 하므로 앞에 await를 두지 않는다.
+  const file = new File([blob], name, { type: 'application/json' });
+  if (!navigator.canShare?.({ files: [file] })) { download(); return; }
+  navigator.share({ files: [file], title: '타바타 백업' })
+    .then(() => message('백업 파일을 공유했습니다.', true))
+    .catch(error => { if (error.name !== 'AbortError') download(); });
 });
 $('import-button').addEventListener('click', () => $('import-file').click());
 $('import-file').addEventListener('change', async event => {
