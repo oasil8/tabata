@@ -5,3 +5,4 @@ import './audio.test.mjs';
 import './assets.test.mjs';
 import './exercise-display.test.mjs';
 import './exercises-db.test.mjs';
+import './memo.test.mjs';

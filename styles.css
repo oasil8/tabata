@@ -50,9 +50,9 @@ button:focus-visible, input:focus-visible {
 }
 
 main {
-  max-width: 560px;
+  max-width: 1100px;
   margin: auto;
-  padding: env(safe-area-inset-top) 8px calc(76px + env(safe-area-inset-bottom));
+  padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) calc(76px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 }
 
 .topbar {
@@ -262,8 +262,10 @@ dialog {
   border: 1px solid #333;
   border-radius: 24px;
   padding: 24px;
-  width: min(100% - 24px,560px);
-  max-height: calc(100dvh - 32px);
+  width: min(100% - 24px,720px);
+  max-height: calc(100vh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: auto;
   overscroll-behavior: contain;
 }
 
@@ -509,6 +511,8 @@ textarea:focus-visible, a:focus-visible {
 }
 
 #memo-view {
+  max-width: 720px;
+  margin: auto;
   padding: 20px 12px;
 }
 
@@ -602,13 +606,13 @@ textarea:focus-visible, a:focus-visible {
   color: var(--yellow);
 }
 
-#exercise-detail li {
+#exercise-detail li, .exercise-description li {
   margin: 10px 0;
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
 
-#exercise-detail img {
+.exercise-image img {
   display: block;
   max-width: 100%;
   max-height: 300px;
@@ -662,4 +666,88 @@ textarea:focus-visible, a:focus-visible {
     font-size: 11px;
     padding: 6px;
   }
+}
+
+#timer-view {
+  height: calc(100vh - 76px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: calc(100dvh - 76px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto auto;
+}
+
+#timer-view > * { min-width: 0; }
+#timer-view .clock-panel { min-height: 0; container-type: size; }
+.digits { font-size: clamp(64px, min(28vw, 22vh), 260px); line-height: 1.1; margin: auto 0; }
+.digits { font-size: clamp(64px, min(28vw, 22dvh), 260px); }
+#timer-hint { margin-bottom: 4px; }
+body:has(#timer-view:not([hidden])) #message {
+  position: fixed;
+  bottom: calc(70px + env(safe-area-inset-bottom));
+  left: 12px;
+  right: 12px;
+  max-width: 720px;
+  margin: auto;
+  z-index: 3;
+}
+.exercise-description { overflow-wrap: anywhere; }
+.exercise-image { margin: 16px 0; text-align: center; }
+.exercise-image figcaption { color: #999; font-size: 12px; line-height: 1.6; }
+.image-failed { min-height: 100px; display: grid; place-items: center; background: #222; border-radius: 12px; padding: 16px; }
+.compact-row { padding: 0; margin: 6px 0; }
+.exercise-entry { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; border: 0; background: none; }
+.entry-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-note { color: var(--yellow); }
+.compact-row .button-row { padding: 0 8px 8px; }
+.button-row { flex-wrap: wrap; }
+.search-result > :first-child { min-width: 0; }
+dialog, #memo-view { overflow-wrap: anywhere; }
+
+@media (min-width: 700px) and (min-height: 601px) {
+  main { padding-left: max(28px, env(safe-area-inset-left)); padding-right: max(28px, env(safe-area-inset-right)); }
+  .topbar { min-height: 64px; }
+  .routine-heading { padding: 16px 12px 24px; }
+  #routine-title { font-size: clamp(32px, 4vw, 46px); }
+  .total, #phase { font-size: clamp(18px, 2.5vw, 28px); }
+  .clock-panel { padding: 28px; }
+  .next-segment { min-height: clamp(100px, 13vh, 150px); gap: 20px; }
+  #next-name, .current-exercise #next-name { font-size: clamp(26px, 3.5vw, 40px); }
+  #next-note { font-size: 16px; }
+  .controls { grid-template-columns: 1fr clamp(120px, 16vh, 190px) 1fr; padding-top: 20px; }
+  .play-button { height: clamp(120px, 16vh, 190px); font-size: 26px; }
+  .controls strong { font-size: 44px; }
+  .controls span, #timer-hint { font-size: 14px; }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  main { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+  #timer-view {
+    height: calc(100vh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: calc(100dvh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: 36px auto minmax(0, 1fr) auto auto;
+    column-gap: 16px;
+  }
+  .topbar { grid-column: 1 / -1; }
+  .topbar button { min-height: 32px; padding: 4px 0; }
+  .clock-panel { grid-column: 1; grid-row: 2 / 6; padding: 12px; margin-bottom: 4px; }
+  .digits { font-size: clamp(64px, min(16vw, 37vh), 180px); }
+  .digits { font-size: clamp(64px, min(16vw, 37dvh), 180px); }
+  .routine-heading { grid-column: 2; grid-row: 2; padding: 2px 4px; }
+  #routine-title { font-size: 23px; max-height: 2.4em; }
+  .total { margin: 4px 0; }
+  .next-segment { grid-column: 2; grid-row: 3; padding: 4px; gap: 8px; }
+  .current-exercise #next-name { font-size: 21px; }
+  .controls { grid-column: 2; grid-row: 4; grid-template-columns: 1fr 76px 1fr; padding-top: 4px; gap: 6px; }
+  .play-button { height: 76px; font-size: 17px; }
+  .controls strong { font-size: 25px; }
+  .controls > div { gap: 2px; }
+  #timer-hint { grid-column: 2; grid-row: 5; margin-top: 4px; font-size: 10px; }
+  .tabbar button { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 6px; gap: 8px; }
+  .tabbar button span { font-size: 20px; }
+  dialog { padding: 16px; }
+}
+
+
+@supports (font-size: 1cqw) {
+  .digits { font-size: min(31cqw, 65cqh); }
 }
