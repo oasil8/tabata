@@ -123,6 +123,8 @@ function draw() {
   const position = positionAt(segments, time);
   const current = segments[position.index];
   const type = routine && position.done ? 'done' : current?.type || 'prepare';
+  // 전체 남은 시간: 운동 전체 길이에서 지금까지 재생한 만큼을 뺀 값(초 단위 올림).
+  $('total-left').textContent = format(Math.max(0, Math.ceil(totalDuration(segments) - time)));
   const key = `${position.index}:${position.remaining}:${audio.paused}:${started}:${!!routine}`;
   if (lastDisplay !== key) {
     lastDisplay = key;

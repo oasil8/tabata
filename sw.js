@@ -1,5 +1,5 @@
 const PREFIX = `tabata-${self.registration.scope}-`;
-const CACHE = `${PREFIX}v20`;
+const CACHE = `${PREFIX}v21`;
 // 이미지는 파일 이름 기준으로 한 번만 받는다. 같은 이름의 이미지 내용을 바꾸면 이 버전을 올려야 새 이미지가 반영된다.
 const IMAGE_CACHE = `${PREFIX}images-v1`;
 const FILES = [

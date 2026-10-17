@@ -856,3 +856,8 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 .sheet:focus {
   outline: none;
 }
+
+.total .total-sep {
+  color: #777;
+  margin: 0 8px;
+}

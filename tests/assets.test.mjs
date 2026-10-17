@@ -31,7 +31,9 @@ test('이미지는 고정 캐시에 누락분만 저장하고 업데이트·오�
   const missing = `${scope}images/crunch-2.jpg`;
   const response = { ok: true, clone() { return this; } };
   stores.set(prefix + 'images-v1', new Map([[image, response]]));
-  stores.set(prefix + 'v19', new Map());
+  // 배포 때마다 버전이 오르므로 sw.js에서 현재 버전을 읽는다.
+  const version = Number(readFileSync(new URL('sw.js', root), 'utf8').match(/\}v(\d+)`/)[1]);
+  stores.set(prefix + `v${version - 1}`, new Map());
   stores.set('another-app-v1', new Map());
   let offline = false;
   vm.runInNewContext(readFileSync(new URL('sw.js', root), 'utf8'), {
@@ -63,9 +65,9 @@ test('이미지는 고정 캐시에 누락분만 저장하고 업데이트·오�
   assert.ok(!downloads.includes(image));
   assert.ok(downloads.includes(missing));
   assert.equal(stores.get(prefix + 'images-v1').size, 2, '404는 저장하지 않음');
-  assert.ok(!stores.get(prefix + 'v20').has(image));
+  assert.ok(!stores.get(prefix + `v${version}`).has(image));
   await lifecycle('activate');
-  assert.deepEqual(deleted, [prefix + 'v19']);
+  assert.deepEqual(deleted, [prefix + `v${version - 1}`]);
   offline = true;
   const cached = await new Promise(resolve => events.fetch({ request: { method: 'GET', url: missing, mode: 'cors' }, respondWith: resolve }));
   assert.equal(cached, response);
