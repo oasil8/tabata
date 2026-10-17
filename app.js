@@ -269,7 +269,7 @@ function renderList() {
     card.append(select, actions); $('routine-list').append(card);
   }
 }
-$('edit-button').addEventListener('click', () => { pause(); fillEditor(selected()); renderList(); $('editor').showModal(); });
+$('edit-button').addEventListener('click', () => { pause(); fillEditor(selected()); renderList(); $('editor').showModal(); document.activeElement?.blur(); }); // 첫 버튼(취소)에 포커스 테두리가 생기지 않게
 $('cancel-edit').addEventListener('click', () => $('editor').close());
 // 저장 = 지금 루틴 수정, 새 타이머 추가 = 입력한 값 그대로 새 루틴으로 저장.
 function saveRoutine(asNew) {
