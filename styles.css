@@ -849,3 +849,15 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 .backup p, .choice-dialog p { margin: 12px 0 20px; }
 .choice-dialog .wide-button { margin-top: 24px; }
 .memo-field, .field-row > label { min-width: 0; }
+
+.notice-list {
+  margin: 0 0 28px;
+  padding-left: 20px;
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.notice-list li + li {
+  margin-top: 10px;
+}

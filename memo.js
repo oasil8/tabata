@@ -317,6 +317,19 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
       view.append(button('내 종목 관리', () => { screen = 'manage'; render(); }));
     }
     const info = el('footer', undefined, 'source-info');
+    if (screen === 'list') {
+      const notes = el('ul', undefined, 'notice-list');
+      for (const text of [
+        '루틴과 메모는 이 폰에만 저장돼요. 홈 화면 아이콘을 지우거나 사파리의 방문 기록·웹사이트 데이터를 지우면 모두 사라져요.',
+        '그래서 앱을 지우기 전이나 폰을 바꾸기 전에는 꼭 타이머 → 편집 → 백업 → 내보내기로 백업 파일을 저장해 두세요. 가끔 미리 해두면 더 안전해요.',
+        '다시 설치했거나 새 폰이라면 편집 → 백업 → 가져오기에서 백업 파일을 고르면 그대로 돌아와요.',
+        '업데이트는 따로 설치할 필요가 없어요. 인터넷이 연결된 상태에서 앱을 완전히 닫았다가(앱 전환 화면에서 위로 밀기) 다시 열면 새 버전이 적용돼요. 바로 안 바뀌면 한 번 더 닫았다 열어 주세요.',
+        '항상 홈 화면 아이콘으로 실행하세요. 사파리 탭에서 쓰면 한동안 안 열었을 때 데이터가 지워질 수 있어요.',
+        '소리가 안 나면 무음 스위치와 볼륨을 확인하세요. 화면을 꺼도 안내 음성은 계속 나오고, 틀어둔 음악은 멈춰요.',
+        '처음 한 번만 인터넷이 필요하고 그 뒤로는 오프라인에서도 동작해요. 종목 이미지는 인터넷이 있을 때만 보여요.',
+      ]) notes.append(el('li', text));
+      info.append(el('h2', '꼭 알아두세요'), notes);
+    }
     info.append(el('h2', '정보'), el('p', '운동 정보 일부 출처: wger.de (CC-BY-SA 4.0), 한국어 번역·편집'), link('wger.de', 'https://wger.de/'), link('CC-BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/'));
     view.append(info);
   }
