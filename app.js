@@ -385,6 +385,8 @@ if ('serviceWorker' in navigator) {
     };
     watchInstall();
     registration.addEventListener('updatefound', watchInstall);
+    // 이미지는 설치와 분리해 앱이 열린 뒤 서비스워커에 채우도록 요청한다(없는 것만 받음).
+    navigator.serviceWorker.ready.then(ready => ready.active?.postMessage('cache-images'));
     // 홈 화면 앱은 닫아도 다시 '이어서' 열리는 경우가 많아, 화면에 돌아올 때마다 새 버전을 확인한다.
     document.addEventListener('visibilitychange', () => { if (!document.hidden) registration.update().catch(() => {}); });
   }).catch(offlineFailed);

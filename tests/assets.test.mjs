@@ -41,6 +41,10 @@ test('이미지는 고정 캐시에 누락분만 저장하고 업데이트·오�
     self: { registration: { scope }, skipWaiting: async () => {}, clients: { claim: async () => {} }, addEventListener: (name, fn) => { events[name] = fn; } },
     caches: {
       keys: async () => [...stores.keys()],
+      match: async request => {
+        const key = new URL(request, scope).href;
+        for (const store of stores.values()) if (store.has(key)) return store.get(key);
+      },
       delete: async key => { deleted.push(key); return stores.delete(key); },
       open: async key => {
         if (!stores.has(key)) stores.set(key, new Map());
@@ -61,7 +65,10 @@ test('이미지는 고정 캐시에 누락분만 저장하고 업데이트·오�
     },
   });
   const lifecycle = name => new Promise((resolve, reject) => events[name]({ waitUntil: p => p.then(resolve, reject) }));
+  const fill = () => new Promise((resolve, reject) => events.message({ data: 'cache-images', waitUntil: p => p.then(resolve, reject) }));
   await lifecycle('install');
+  assert.deepEqual(downloads, [], '설치는 이미지를 기다리지 않음');
+  await fill();
   assert.ok(!downloads.includes(image));
   assert.ok(downloads.includes(missing));
   assert.equal(stores.get(prefix + 'images-v1').size, 2, '404는 저장하지 않음');
@@ -71,8 +78,10 @@ test('이미지는 고정 캐시에 누락분만 저장하고 업데이트·오�
   offline = true;
   const cached = await new Promise(resolve => events.fetch({ request: { method: 'GET', url: missing, mode: 'cors' }, respondWith: resolve }));
   assert.equal(cached, response);
+  offline = false;
   const before = downloads.length;
   await lifecycle('install');
+  await fill();
   assert.deepEqual(downloads.slice(before), [`${scope}images/failed-1.jpg`]);
 });
 test('매니페스트 상대경로와 실제 PNG 크기', () => {
