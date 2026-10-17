@@ -271,25 +271,30 @@ function renderList() {
 }
 $('edit-button').addEventListener('click', () => { pause(); fillEditor(selected()); renderList(); $('editor').showModal(); });
 $('cancel-edit').addEventListener('click', () => $('editor').close());
-$('new-routine').addEventListener('click', () => { fillEditor(null); $('editor').scrollTop = 0; $('routine-name').focus(); });
-$('routine-form').addEventListener('submit', event => {
-  event.preventDefault();
+// 저장 = 지금 루틴 수정, 새 타이머 추가 = 입력한 값 그대로 새 루틴으로 저장.
+function saveRoutine(asNew) {
   try {
-    if (!editingId && data.routines.length >= 100) throw new Error('루틴은 최대 100개까지 저장할 수 있습니다.');
+    const id = asNew ? null : editingId;
+    if (!id && data.routines.length >= 100) throw new Error('루틴은 최대 100개까지 저장할 수 있습니다.');
+    const name = $('routine-name').value.trim();
+    if (!name) { $('routine-name').focus(); throw new Error('루틴 이름을 입력해 주세요.'); }
+    if (asNew && data.routines.some(r => r.name === name)) { $('routine-name').focus(); throw new Error('같은 이름의 루틴이 있어요. 이름을 바꿔 주세요.'); }
     memo.flush();
-    const previous = data.routines.find(r => r.id === editingId);
-    const value = { id: editingId || crypto.randomUUID(), name: $('routine-name').value, exercises: previous?.exercises || [], memo: previous?.memo || '' };
+    const previous = data.routines.find(r => r.id === id);
+    const value = { id: id || crypto.randomUUID(), name, exercises: previous?.exercises || [], memo: previous?.memo || '' };
     for (const [key] of fields) value[key] = $(`field-${key}`).value.trim() === '' ? NaN : Number($(`field-${key}`).value);
     const routine = validateRoutine(value);
-    if (editingId) data.routines = data.routines.map(r => r.id === editingId ? routine : r);
+    if (id) data.routines = data.routines.map(r => r.id === id ? routine : r);
     else data.routines.push(routine);
     data.selectedId = routine.id;
     const error = saveData(data);
     selectRoutine(); fillEditor(routine); renderList();
     if (error) message(error, true);
-    else { $('editor').close(); message('저장했습니다.'); }
+    else { $('editor').close(); message(asNew ? '새 루틴을 추가했습니다.' : '저장했습니다.'); }
   } catch (error) { message(error.message, true); }
-});
+}
+$('new-routine').addEventListener('click', () => saveRoutine(true));
+$('routine-form').addEventListener('submit', event => { event.preventDefault(); saveRoutine(false); });
 $('export-button').addEventListener('click', () => {
   memo.flush();
   const name = `타바타-백업-${new Date().toISOString().slice(0, 10)}.json`;
