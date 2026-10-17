@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import vm from 'node:vm';
 const root = new URL('../', import.meta.url);
-test('서비스워커 필수 캐시 파일이 모두 존재하며 2단계 DB는 제외', () => {
+test('서비스워커 필수 캐시 파일과 운동 DB 포함, 원격 이미지 제외', () => {
   let files;
   const events = {};
   vm.runInNewContext(readFileSync(new URL('sw.js', root), 'utf8'), {
@@ -14,7 +14,10 @@ test('서비스워커 필수 캐시 파일이 모두 존재하며 2단계 DB는 
     try {
       for (const file of files) assert.ok(existsSync(new URL(file, root)), file);
       assert.equal(files.filter(file => file.endsWith('.wav')).length, 9);
-      assert.equal(files.some(file => file.includes('data/')), false);
+      assert.ok(files.includes('./data/exercises.json'));
+      assert.ok(files.includes('./memo.js'));
+      assert.ok(files.includes('./exercise-display.js'));
+      assert.ok(files.every(file => file.startsWith('./')));
       resolve();
     } catch (error) { reject(error); }
   }, reject) }));

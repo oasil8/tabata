@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { buildSegments } from '../segments.js';
+import { defaults } from '../store.js';
+
+test('exercise display cycles, next labels, opposite side, notes and completion', async () => {
+  const { exerciseFor, displayExerciseName } = await import('../exercise-display.js');
+  const routine = { ...defaults().routines[0], cycles: 2 };
+  const segments = buildSegments(routine);
+  const works = segments.map((s, i) => s.type === 'work' ? exerciseFor(segments, i, routine).name : null).filter(Boolean);
+  assert.deepEqual(works, Array.from({ length: 4 }, () => ['크런치', '바이시클 크런치', '레그 레이즈', '힐 터치']).flat());
+  assert.equal(exerciseFor(segments, 0, routine).label, '다음');
+  assert.equal(exerciseFor(segments, segments.findIndex(s => s.type === 'rest'), routine).name, '바이시클 크런치');
+  assert.equal(exerciseFor(segments, segments.findIndex(s => s.type === 'cycle_rest'), routine).name, '크런치');
+  assert.equal(exerciseFor(segments, segments.length - 1, routine).name, '마지막이에요 · 수고했어요');
+  assert.equal(exerciseFor(segments, segments.length, routine).name, '수고했어요');
+  assert.equal(exerciseFor(segments, 0, { ...routine, exercises: [] }), null);
+  assert.equal(exerciseFor(segments, segments.length, { ...routine, exercises: [] }), null);
+  const uneven = { ...routine, rounds: 3 };
+  const unevenSegments = buildSegments(uneven);
+  const cycleTwo = unevenSegments.findIndex(s => s.type === 'work' && s.cycle === 2);
+  assert.equal(exerciseFor(unevenSegments, cycleTwo, uneven).name, '크런치');
+  const kb = defaults().routines[1];
+  assert.equal(displayExerciseName(kb.exercises, 3), '싱글렉 스쿼트 (반대쪽)');
+  assert.equal(displayExerciseName(kb.exercises, 0), '스윙');
+  const entries = [{ name: '런지', exerciseId: null, note: '' }, { name: '런지', exerciseId: null, note: '무릎 주의' }];
+  assert.equal(displayExerciseName(entries, 1), '런지 (반대쪽)');
+  assert.equal(displayExerciseName(entries, 2), '런지');
+  assert.equal(displayExerciseName([{ ...entries[0], exerciseId: 'lunge' }, entries[1]], 1), '런지');
+  assert.equal(displayExerciseName([{ ...entries[0], exerciseId: 'lunge' }, { ...entries[1], name: '다른 표시 이름', exerciseId: 'lunge' }], 1), '다른 표시 이름 (반대쪽)');
+  const short = { ...routine, exercises: entries };
+  const restIndex = segments.findIndex(s => s.type === 'rest');
+  assert.deepEqual(exerciseFor(segments, restIndex, short), { label: '다음', name: '런지 (반대쪽)', note: '무릎 주의', exerciseId: null });
+  assert.deepEqual(exerciseFor(segments, restIndex + 1, short), { label: '', name: '런지 (반대쪽)', note: '무릎 주의', exerciseId: null });
+});

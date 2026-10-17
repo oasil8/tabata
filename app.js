@@ -1,6 +1,8 @@
 import { buildSegments, totalDuration, positionAt } from './segments.js';
-import { defaults, fields, loadData, saveData, validateData, validateRoutine } from './store.js';
+import { defaults, fields, loadData, saveData, validateData, validateRoutine, mergeData } from './store.js';
 import { renderWorkout, silenceURL, sampleRateFor } from './audio-render.js';
+import { exerciseFor } from './exercise-display.js';
+import { createMemo } from './memo.js';
 
 const $ = id => document.getElementById(id);
 const labels = { prepare: '준비', work: '운동', rest: '휴식', cycle_rest: '사이클 휴식', cooldown: '쿨다운', done: '완료' };
@@ -19,6 +21,7 @@ let lastDisplay = '';
 const audio = $('workout-audio');
 const unlockURL = silenceURL();
 const selected = () => data.routines.find(r => r.id === data.selectedId);
+const memo = createMemo({ getData: () => data, save: persist, choose, changed: () => { lastDisplay = ''; draw(); } });
 
 function message(text, editor = false) {
   const target = $(editor ? 'editor-message' : 'message');
@@ -27,7 +30,7 @@ function message(text, editor = false) {
 }
 function persist() {
   const error = saveData(data);
-  message(error || '저장했습니다.', $('editor').open);
+  message(error, $('editor').open);
 }
 function releaseWakeLock() {
   const lock = wakeLock;
@@ -71,10 +74,17 @@ function selectRoutine() {
   draw();
 }
 
-// 2단계 운동 종목 표시가 들어갈 독립된 다음 구간 렌더러.
-function renderNextSegment(next) {
-  $('next-name').textContent = next ? labels[next.type] : '완료';
-  $('next-time').textContent = next ? format(next.duration) : '—';
+function renderNextSegment(position, routine) {
+  const exercise = routine ? exerciseFor(segments, position.index, routine) : null;
+  const next = segments[position.index + 1];
+  $('next-label').textContent = exercise ? exercise.label : '다음 구간';
+  $('next-name').textContent = exercise ? exercise.name : next ? labels[next.type] : '완료';
+  $('next-time').textContent = exercise ? '' : next ? format(next.duration) : '—';
+  $('next-note').textContent = exercise?.note || '';
+  $('next-note').hidden = !exercise?.note;
+  $('exercise-info').hidden = !exercise?.exerciseId;
+  $('exercise-info').onclick = () => memo.showDetail(exercise.exerciseId);
+  $('next-segment').classList.toggle('current-exercise', !!exercise && segments[position.index]?.type === 'work');
 }
 function draw() {
   const routine = selected();
@@ -95,7 +105,7 @@ function draw() {
     const cycles = !routine || position.done || type === 'cooldown' ? 0 : current?.cycle ? routine.cycles - current.cycle + (type === 'cycle_rest' ? 0 : 1) : routine.cycles;
     $('rounds-left').textContent = rounds;
     $('cycles-left').textContent = cycles;
-    renderNextSegment(segments[position.index + 1]);
+    renderNextSegment(position, routine);
     $('timer-hint').textContent = routine ? '시작하면 운동 전체의 안내 음성을 준비합니다.' : '편집에서 새 타이머를 추가해 주세요.';
   }
   $('progress').style.width = `${totalDuration(segments) ? Math.min(100, time / totalDuration(segments) * 100) : 0}%`;
@@ -161,7 +171,14 @@ if ('mediaSession' in navigator) {
 for (const [key, label, description, min, max] of fields) {
   const row = document.createElement('div');
   row.className = 'field-row';
-  row.innerHTML = `<label for="field-${key}">${label}<small>${description}</small></label><div class="number-wrap"><input id="field-${key}" name="${key}" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" required><span>${key === 'rounds' || key === 'cycles' ? '개' : '초'}</span></div>`;
+  const fieldLabel = document.createElement('label');
+  fieldLabel.htmlFor = `field-${key}`; fieldLabel.textContent = label;
+  const small = document.createElement('small'); small.textContent = description; fieldLabel.append(small);
+  const wrap = document.createElement('div'); wrap.className = 'number-wrap';
+  const input = document.createElement('input');
+  Object.assign(input, { id: `field-${key}`, name: key, type: 'number', inputMode: 'numeric', min, max, step: 1, required: true });
+  const unit = document.createElement('span'); unit.textContent = key === 'rounds' || key === 'cycles' ? '개' : '초';
+  wrap.append(input, unit); row.append(fieldLabel, wrap);
   $('fields').append(row);
 }
 function fillEditor(routine) {
@@ -213,7 +230,9 @@ $('routine-form').addEventListener('submit', event => {
   event.preventDefault();
   try {
     if (!editingId && data.routines.length >= 100) throw new Error('루틴은 최대 100개까지 저장할 수 있습니다.');
-    const value = { id: editingId || crypto.randomUUID(), name: $('routine-name').value, exercises: [] };
+    memo.flush();
+    const previous = data.routines.find(r => r.id === editingId);
+    const value = { id: editingId || crypto.randomUUID(), name: $('routine-name').value, exercises: previous?.exercises || [], memo: previous?.memo || '' };
     for (const [key] of fields) value[key] = $(`field-${key}`).value.trim() === '' ? NaN : Number($(`field-${key}`).value);
     const routine = validateRoutine(value);
     if (editingId) data.routines = data.routines.map(r => r.id === editingId ? routine : r);
@@ -226,6 +245,7 @@ $('routine-form').addEventListener('submit', event => {
   } catch (error) { message(error.message, true); }
 });
 $('export-button').addEventListener('click', () => {
+  memo.flush();
   const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   const link = document.createElement('a'); link.href = url; link.download = `타바타-백업-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.append(link); link.click(); link.remove();
@@ -237,23 +257,22 @@ $('import-file').addEventListener('change', async event => {
   const file = event.target.files[0]; event.target.value = '';
   if (!file) return;
   try {
-    if (file.size > 1024 * 1024) throw new Error('1MB 이하의 백업 파일을 선택하세요.');
+    if (file.size > 64 * 1024 * 1024) throw new Error('64MB 이하의 백업 파일을 선택하세요.');
     const imported = validateData(JSON.parse(await file.text()));
     choose('백업을 가져올까요?', `${imported.routines.length}개 루틴입니다. 병합하면 현재 루틴을 유지하며, 같은 ID의 루틴도 새 ID로 추가합니다. 덮어쓰면 현재 목록을 교체합니다.`, [
       ['병합', () => {
-        if (data.routines.length + imported.routines.length > 100) { message('병합 후 루틴이 100개를 넘습니다.', true); return; }
-        const ids = new Set(data.routines.map(r => r.id));
-        const added = imported.routines.map(r => ({ ...r, id: ids.has(r.id) ? crypto.randomUUID() : r.id }));
-        data.routines.push(...added); data.selectedId ||= added[0]?.id || null;
-        finishImport();
+        try { memo.flush(); data = mergeData(data, imported); finishImport(); }
+        catch (error) { message(error.message, true); }
       }],
-      ['덮어쓰기', () => { data = imported; finishImport(); }],
+      ['덮어쓰기', () => { memo.flush(); data = imported; finishImport(); }],
     ]);
   } catch (error) { message(`가져오지 못했습니다. ${error instanceof SyntaxError ? '올바른 JSON 파일이 아닙니다.' : error.message}`, true); }
 });
-function finishImport() { selectRoutine(); fillEditor(selected()); renderList(); persist(); }
+function finishImport() { selectRoutine(); fillEditor(selected()); renderList(); memo.render(); persist(); }
 for (const name of ['timer', 'memo']) {
   $(`${name}-tab`).addEventListener('click', () => {
+    memo.flush();
+    if (name === 'memo') memo.render();
     for (const tab of ['timer', 'memo']) {
       $(`${tab}-view`).hidden = tab !== name;
       if (tab === name) $(`${tab}-tab`).setAttribute('aria-current', 'page');
@@ -264,7 +283,15 @@ for (const name of ['timer', 'memo']) {
 selectRoutine();
 message(loaded.error);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(() => navigator.serviceWorker.ready).then(() => {
-    if (!loaded.error && !$('message').textContent) message('오프라인 준비가 완료되었습니다.');
-  }).catch(() => message('오프라인 준비에 실패했습니다. 인터넷 연결 후 다시 열어 주세요.'));
+  const offlineFailed = () => message('오프라인 준비에 실패했습니다. 인터넷 연결 후 다시 열어 주세요.');
+  navigator.serviceWorker.register('./sw.js').then(registration => {
+    const watchInstall = () => {
+      const worker = registration.installing;
+      if (worker) worker.addEventListener('statechange', () => {
+        if (worker.state === 'redundant') offlineFailed();
+      });
+    };
+    watchInstall();
+    registration.addEventListener('updatefound', watchInstall);
+  }).catch(offlineFailed);
 }
