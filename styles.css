@@ -666,6 +666,16 @@ textarea:focus-visible, a:focus-visible {
 #routine-title {
   max-height: 2.4em;
   overflow-y: auto;
+  cursor: pointer;
+}
+
+#routine-title::after {
+  content: " ▾";
+  font-size: 0.6em;
+}
+
+.choice-dialog.stack .button-row {
+  flex-direction: column;
 }
 
 @media (max-width: 420px) {

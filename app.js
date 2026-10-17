@@ -194,12 +194,25 @@ function button(text, action, className = '') {
   element.addEventListener('click', action);
   return element;
 }
-function choose(title, description, actions) {
+function choose(title, description, actions, stack = false) {
+  $('choice-dialog').classList.toggle('stack', stack);
   $('choice-title').textContent = title;
   $('choice-description').textContent = description;
   $('choice-actions').replaceChildren(...actions.map(([label, action]) => button(label, () => { $('choice-dialog').close(); action(); })));
   $('choice-dialog').showModal();
 }
+function pickRoutine(id) {
+  data.selectedId = id;
+  const error = saveData(data);
+  selectRoutine();
+  message(error);
+}
+// 메인 화면의 노란 루틴 이름을 눌러 바로 다른 루틴으로 바꾼다. 운동 중에는 실수로 리셋되지 않게 막는다.
+$('routine-title').addEventListener('click', () => {
+  if (!audio.paused || !data.routines.length) return;
+  choose('운동 목록 변경', '', data.routines.map(r => [`${r.id === data.selectedId ? '✓ ' : ''}${r.name}`, () => pickRoutine(r.id)]), true);
+});
+$('routine-title').addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); $('routine-title').click(); } });
 $('choice-cancel').addEventListener('click', () => $('choice-dialog').close());
 function renderList() {
   $('routine-count').textContent = `${data.routines.length}개`;
@@ -208,7 +221,7 @@ function renderList() {
     const card = document.createElement('article');
     card.className = `routine-card${routine.id === data.selectedId ? ' selected' : ''}`;
     const select = button(`${routine.id === data.selectedId ? '✓ ' : ''}${routine.name}`, () => {
-      data.selectedId = routine.id; persist(); selectRoutine(); fillEditor(routine); renderList();
+      pickRoutine(routine.id); $('editor').close();
     }, 'select-routine');
     select.setAttribute('aria-pressed', String(routine.id === data.selectedId));
     const summary = document.createElement('span');

@@ -18,7 +18,7 @@
   <main>
     <section id="timer-view" aria-label="타이머">
       <header class="topbar"><button id="edit-button" class="quiet">편집</button><span class="brand">타바타<span class="brand-dot">●</span></span><button id="reset-button" class="quiet">리셋</button></header>
-      <div class="routine-heading"><h1 id="routine-title"></h1><p class="total">전체 <span id="total-time"></span></p></div>
+      <div class="routine-heading"><h1 id="routine-title" role="button" tabindex="0" aria-label="운동 목록 변경"></h1><p class="total">전체 <span id="total-time"></span></p></div>
       <section id="clock-panel" class="clock-panel" data-phase="prepare" aria-label="현재 구간">
         <div class="phase-line"><span id="phase">준비</span><span id="play-state">시작할 준비</span></div>
         <div id="remaining" class="digits" role="timer" aria-live="off">00:10</div>
