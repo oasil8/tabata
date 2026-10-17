@@ -125,9 +125,11 @@ export function createMemo({ getData, save, choose, changed }) {
     const [urlLabel, url] = input('영상 링크 (https://)', existing?.videoUrl || '', 2000);
     const status = el('p', '', 'message');
     status.hidden = true;
-    const submit = el('button', '저장');
+    const submit = el('button', '저장', 'save-button');
     submit.type = 'submit';
-    form.append(nameLabel, stepsLabel, tipsLabel, urlLabel, status, submit, button('취소', () => editor.close()));
+    const actions = el('div', undefined, 'button-row custom-actions');
+    actions.append(button('취소', () => editor.close()), submit);
+    form.append(nameLabel, stepsLabel, tipsLabel, urlLabel, status, actions);
     form.addEventListener('submit', event => {
       event.preventDefault();
       try {
@@ -190,7 +192,8 @@ export function createMemo({ getData, save, choose, changed }) {
     }
     search.addEventListener('input', resultsFor);
     // 검색에 원하는 종목이 없을 때를 대비해 항상 보이는 직접 추가 버튼. 검색어가 있으면 이름으로 미리 채운다.
-    const direct = button('＋ 목록에 없으면 직접 입력해서 추가', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)), 'wide-button');
+    const direct = button('＋ 목록에 없으면 직접 입력해서 추가', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)));
+    direct.className = 'direct-add';
     area.append(searchLabel, direct, chips, results);
     resultsFor();
     view.append(area);

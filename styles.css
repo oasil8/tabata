@@ -774,7 +774,21 @@ dialog, #memo-view { overflow-wrap: anywhere; }
   .digits { font-size: min(31cqw, 65cqh); }
 }
 
-.exercise-search .wide-button {
+.exercise-search .direct-add {
+  display: block;
   width: 100%;
-  margin: 8px 0 12px;
+  margin: 10px 0 14px;
+  border: 1px dashed var(--yellow);
+  color: var(--yellow);
+  background: transparent;
+}
+
+.custom-actions {
+  margin-top: 16px;
+}
+
+.custom-actions .save-button {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: #111;
 }
