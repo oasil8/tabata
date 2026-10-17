@@ -1,0 +1,949 @@
+{
+ "wger-194": {
+  "source": "wger",
+  "ref": 194,
+  "urls": [
+   "https://wger.de/media/exercise-images/194/34600351-8b0b-4cb0-8daa-583537be15b0.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 딥스의 기존 연결 동작."
+ },
+ "wger-282": {
+  "source": "wger",
+  "ref": 282,
+  "urls": [
+   "https://wger.de/media/exercise-images/282/f6121ac9-330e-4ed7-8219-91ce246bf871.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 핸드스탠드 푸시업의 기존 연결 동작."
+ },
+ "wger-454": {
+  "source": "wger",
+  "ref": 454,
+  "urls": [
+   "https://wger.de/media/exercise-images/454/447f3c17-405f-46e0-b138-65c2a8caaab0.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 파이크 푸시업의 기존 연결 동작."
+ },
+ "wger-458": {
+  "source": "wger",
+  "ref": 458,
+  "urls": [
+   "https://wger.de/media/exercise-images/458/b7bd9c28-9f1d-4647-bd17-ab6a3adf5770.png"
+  ],
+  "approx": false,
+  "note": "기존 플랭크 10장 중 wger 458 대표 1장 유지. 정적 버티기이며 최대 2장 제한에 맞춰 중복 자세 제외."
+ },
+ "wger-570": {
+  "source": "wger",
+  "ref": 570,
+  "urls": [
+   "https://wger.de/media/exercise-images/570/68b4a33f-40f1-4dda-b56c-a2e20ed13903.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 맨몸 슈러그의 기존 연결 동작."
+ },
+ "wger-957": {
+  "source": "wger",
+  "ref": 957,
+  "urls": [
+   "https://wger.de/media/exercise-images/957/0fd94587-6021-4763-856e-7227f5fcba2a.png",
+   "https://wger.de/media/exercise-images/1572/3d14e761-a73d-49da-8804-f3016a7573ff.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 버드독의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-977": {
+  "source": "wger",
+  "ref": 977,
+  "urls": [
+   "https://wger.de/media/exercise-images/977/3124c091-6395-4377-96c5-56048b627ceb.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 박스 스쿼트의 기존 연결 동작."
+ },
+ "wger-983": {
+  "source": "wger",
+  "ref": 983,
+  "urls": [
+   "https://wger.de/media/exercise-images/983/16245344-9957-4a24-8d61-f9939ed5f964.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 하이 니의 기존 연결 동작."
+ },
+ "wger-984": {
+  "source": "wger",
+  "ref": 984,
+  "urls": [
+   "https://wger.de/media/exercise-images/984/5c7ffe68-e7b2-47f3-a22a-f9cc28640432.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 런지의 기존 연결 동작."
+ },
+ "wger-988": {
+  "source": "wger",
+  "ref": 988,
+  "urls": [
+   "https://wger.de/media/exercise-images/988/6283b258-a4d7-4833-84f7-a38987022d3d.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 불가리안 스플릿 스쿼트의 기존 연결 동작."
+ },
+ "wger-990": {
+  "source": "wger",
+  "ref": 990,
+  "urls": [
+   "https://wger.de/media/exercise-images/990/de20457c-914a-45c9-8cf9-0ad9739759a1.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 덩키킥의 기존 연결 동작."
+ },
+ "wger-999": {
+  "source": "wger",
+  "ref": 999,
+  "urls": [
+   "https://wger.de/media/exercise-images/999/d0931eb3-8db0-4049-bb08-aa4036072056.jfif",
+   "https://wger.de/media/exercise-images/999/8548b2d2-004d-48b4-95fd-b1b25f4e53d0.jfif"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 리버스 런지의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1000": {
+  "source": "wger",
+  "ref": 1000,
+  "urls": [
+   "https://wger.de/media/exercise-images/1000/553266a8-a972-48c5-a014-b12afac66f65.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 플로어 딥스의 기존 연결 동작."
+ },
+ "wger-1002": {
+  "source": "wger",
+  "ref": 1002,
+  "urls": [
+   "https://wger.de/media/exercise-images/1002/ddf91765-8045-4087-bece-de17f33332ce.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 아기 자세의 기존 연결 동작."
+ },
+ "wger-1007": {
+  "source": "wger",
+  "ref": 1007,
+  "urls": [
+   "https://wger.de/media/exercise-images/1007/757846d3-78e4-4068-bbca-62e567372c94.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 목 좌우 돌리기의 기존 연결 동작."
+ },
+ "wger-1018": {
+  "source": "wger",
+  "ref": 1018,
+  "urls": [
+   "https://wger.de/media/exercise-images/1018/5bbd3879-b6fc-4aaa-9e8e-33ae9a688112.png",
+   "https://wger.de/media/exercise-images/1018/5f84cb9b-2d3a-48ff-87ec-b3d3950841f1.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 목 옆으로 기울이기의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1086": {
+  "source": "wger",
+  "ref": 1086,
+  "urls": [
+   "https://wger.de/media/exercise-images/1086/b2ee8d9b-0480-4992-8494-c223b37c2696.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 클로즈그립 푸시업의 기존 연결 동작."
+ },
+ "wger-1105": {
+  "source": "wger",
+  "ref": 1105,
+  "urls": [
+   "https://wger.de/media/exercise-images/1105/36776818-799a-40bf-9eca-aebb3aa5008f.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 시티드 니턱의 기존 연결 동작."
+ },
+ "wger-1141": {
+  "source": "wger",
+  "ref": 1141,
+  "urls": [
+   "https://wger.de/media/exercise-images/1141/c7be1cd1-46c5-4a86-a114-5f0fe861c3e0.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 싱글렉 데드리프트의 기존 연결 동작."
+ },
+ "wger-1198": {
+  "source": "wger",
+  "ref": 1198,
+  "urls": [
+   "https://wger.de/media/exercise-images/1198/864906ac-4ac7-4e52-a886-c6bb97950a9f.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 인버티드 로우의 기존 연결 동작."
+ },
+ "wger-1217": {
+  "source": "wger",
+  "ref": 1217,
+  "urls": [
+   "https://wger.de/media/exercise-images/1217/590e65db-de60-4727-b7eb-55f80af56043.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 핑거 푸시업의 기존 연결 동작."
+ },
+ "wger-1223": {
+  "source": "wger",
+  "ref": 1223,
+  "urls": [
+   "https://wger.de/media/exercise-images/1223/bf20836a-23b0-4f50-8b98-cfdd97684527.webp"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 머리 위 손뼉치기의 기존 연결 동작."
+ },
+ "wger-1230": {
+  "source": "wger",
+  "ref": 1230,
+  "urls": [
+   "https://wger.de/media/exercise-images/1230/9fd1e2fd-f2c4-432d-b3ae-5e5f24085777.webp",
+   "https://wger.de/media/exercise-images/1231/b10457ce-5fa5-4d20-a32f-3c7100c6a9d9.webp"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 삼두근 스트레칭의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1232": {
+  "source": "wger",
+  "ref": 1232,
+  "urls": [
+   "https://wger.de/media/exercise-images/1232/2b6de046-5806-49e3-bf36-b6fae16af021.png",
+   "https://wger.de/media/exercise-images/1233/d7d6f9e1-7834-4cca-bd3b-f9def33ff44d.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 이두근 스트레칭의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1239": {
+  "source": "wger",
+  "ref": 1239,
+  "urls": [
+   "https://wger.de/media/exercise-images/1239/5026373a-a7b4-4e26-a0aa-c46634205196.jpg",
+   "https://wger.de/media/exercise-images/1876/ca7b3fe7-5908-4ec2-9d85-7fa1b80bb105.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 종아리 스트레칭의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1243": {
+  "source": "wger",
+  "ref": 1243,
+  "urls": [
+   "https://wger.de/media/exercise-images/1243/53d4fabe-c994-4907-873f-8d82813a9832.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 카프 레이즈의 기존 연결 동작."
+ },
+ "wger-1274": {
+  "source": "wger",
+  "ref": 1274,
+  "urls": [
+   "https://wger.de/media/exercise-images/1274/bcffdf52-3c36-4b0c-b787-fb84f20bf82d.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 앉아서 종아리 스트레칭의 기존 연결 동작."
+ },
+ "wger-1285": {
+  "source": "wger",
+  "ref": 1285,
+  "urls": [
+   "https://wger.de/media/exercise-images/1285/1ab8005d-41e4-4505-9a7d-5277d59bb3cd.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 버트킥의 기존 연결 동작."
+ },
+ "wger-1325": {
+  "source": "wger",
+  "ref": 1325,
+  "urls": [
+   "https://wger.de/media/exercise-images/1325/d8372291-6725-452a-9711-6321c061e354.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 사이드 홉의 기존 연결 동작."
+ },
+ "wger-1377": {
+  "source": "wger",
+  "ref": 1377,
+  "urls": [
+   "https://wger.de/media/exercise-images/1377/12e7a231-d36a-4992-bf57-ff7bfe0f3ae4.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 몸통 회전의 기존 연결 동작."
+ },
+ "wger-1387": {
+  "source": "wger",
+  "ref": 1387,
+  "urls": [
+   "https://wger.de/media/exercise-images/1387/a2cf7eda-5540-4105-b30e-1c2f2679a6c7.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 햄스트링 킥의 기존 연결 동작."
+ },
+ "wger-1392": {
+  "source": "wger",
+  "ref": 1392,
+  "urls": [
+   "https://wger.de/media/exercise-images/1392/a02c9c7d-f42d-43e0-9946-1b99b014daee.png",
+   "https://wger.de/media/exercise-images/1392/af848376-3db3-4b16-a056-4aa936d49da4.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 맨몸 굿모닝의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1452": {
+  "source": "wger",
+  "ref": 1452,
+  "urls": [
+   "https://wger.de/media/exercise-images/1452/85a6b9de-4eec-445b-8ebb-f1950b076aba.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 니투체스트 스트레칭의 기존 연결 동작."
+ },
+ "wger-1479": {
+  "source": "wger",
+  "ref": 1479,
+  "urls": [
+   "https://wger.de/media/exercise-images/1479/0305d98e-0887-4c0c-8992-7c220814efc2.webp"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 로테이션 싯업의 기존 연결 동작."
+ },
+ "wger-1551": {
+  "source": "wger",
+  "ref": 1551,
+  "urls": [
+   "https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 푸시업의 기존 연결 동작."
+ },
+ "wger-1554": {
+  "source": "wger",
+  "ref": 1554,
+  "urls": [
+   "https://wger.de/media/exercise-images/1554/49207a62-8799-4b47-8c0b-7bde02926f3d.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 클랩 푸시업의 기존 연결 동작."
+ },
+ "wger-1733": {
+  "source": "wger",
+  "ref": 1733,
+  "urls": [
+   "https://wger.de/media/exercise-images/1733/4ef77069-beb2-4504-a4f3-b181d5f35212.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 스쿼트 홀드의 기존 연결 동작."
+ },
+ "wger-1804": {
+  "source": "wger",
+  "ref": 1804,
+  "urls": [
+   "https://wger.de/media/exercise-images/1804/691c69b8-c3db-4177-8435-dd3a97d88542.webp"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 발목 가동성 록의 기존 연결 동작."
+ },
+ "wger-1839": {
+  "source": "wger",
+  "ref": 1867,
+  "urls": [
+   "https://wger.de/media/exercise-images/1867/767631e5-10d2-46b8-b03f-cc298f96963b.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 힙 플렉서 스트레칭의 기존 연결 동작."
+ },
+ "wger-1861": {
+  "source": "wger",
+  "ref": 1861,
+  "urls": [
+   "https://wger.de/media/exercise-images/1861/0ffe4e99-71ad-47fb-b98c-1f243faa0499.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 옆구리 스트레칭의 기존 연결 동작."
+ },
+ "wger-1868": {
+  "source": "wger",
+  "ref": 1868,
+  "urls": [
+   "https://wger.de/media/exercise-images/1868/446e7065-215d-4a91-9da7-9416101442bb.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 런지 트위스트 스트레칭의 기존 연결 동작."
+ },
+ "wger-1869": {
+  "source": "wger",
+  "ref": 1869,
+  "urls": [
+   "https://wger.de/media/exercise-images/1869/c49187bd-9f90-4a7a-b25e-1d50e857a104.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 누워서 피겨포 스트레칭의 기존 연결 동작."
+ },
+ "wger-1872": {
+  "source": "wger",
+  "ref": 1872,
+  "urls": [
+   "https://wger.de/media/exercise-images/1872/df982df1-512a-4eb9-acd9-68cc1c265df6.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 비둘기 자세의 기존 연결 동작."
+ },
+ "wger-1873": {
+  "source": "wger",
+  "ref": 1873,
+  "urls": [
+   "https://wger.de/media/exercise-images/1873/c0ed299b-6d87-4d90-885d-bb3b5d85f1eb.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 대퇴사두근 스트레칭의 기존 연결 동작."
+ },
+ "wger-1874": {
+  "source": "wger",
+  "ref": 1874,
+  "urls": [
+   "https://wger.de/media/exercise-images/1874/66fca8a5-41e8-42d1-8776-5e46a4902650.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 러너스 런지 스트레칭의 기존 연결 동작."
+ },
+ "wger-1875": {
+  "source": "wger",
+  "ref": 1875,
+  "urls": [
+   "https://wger.de/media/exercise-images/1875/e1128391-4b73-43a9-ab27-657d8bb43083.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 스탠딩 아이티밴드 스트레칭의 기존 연결 동작."
+ },
+ "wger-1916": {
+  "source": "wger",
+  "ref": 1916,
+  "urls": [
+   "https://wger.de/media/exercise-images/1916/e7d97b4b-9fe4-4378-aea3-5a9d93b6eb8d.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 턱 플란체의 기존 연결 동작."
+ },
+ "wger-1962": {
+  "source": "wger",
+  "ref": 1962,
+  "urls": [
+   "https://wger.de/media/exercise-images/1962/74041371-1019-4f89-9ebe-cec792484a46.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 스텝잭의 기존 연결 동작."
+ },
+ "wger-1963": {
+  "source": "wger",
+  "ref": 1963,
+  "urls": [
+   "https://wger.de/media/exercise-images/1963/db285682-1ab3-4be0-ae00-5117ecce1ee6.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 슬로 스쿼트의 기존 연결 동작."
+ },
+ "wger-1965": {
+  "source": "wger",
+  "ref": 1965,
+  "urls": [
+   "https://wger.de/media/exercise-images/1965/03c08a42-dedb-4a46-8d15-acaf497a35a2.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 제자리 무릎 들기의 기존 연결 동작."
+ },
+ "wger-2529": {
+  "source": "wger",
+  "ref": 2529,
+  "urls": [
+   "https://wger.de/media/exercise-images/2529/e97b7a36-3414-4c4f-9d66-fe37182e829b.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 익스플로시브 푸시업의 기존 연결 동작."
+ },
+ "wger-2530": {
+  "source": "wger",
+  "ref": 2530,
+  "urls": [
+   "https://wger.de/media/exercise-images/2530/c39eccd5-c7a5-47cd-85c2-76cac547ad7c.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 러시안 푸시업의 기존 연결 동작."
+ },
+ "wger-2619": {
+  "source": "wger",
+  "ref": 2619,
+  "urls": [
+   "https://wger.de/media/exercise-images/2619/32c68e76-6456-4c29-b24d-89d5a5b12d02.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 싱글렉 착지 홀드의 기존 연결 동작."
+ },
+ "wger-2680": {
+  "source": "wger",
+  "ref": 2680,
+  "urls": [
+   "https://wger.de/media/exercise-images/2680/566cfe8f-ee9a-4f4c-8d1f-f8d71f4779ba.png",
+   "https://wger.de/media/exercise-images/2680/8dae6a8f-ae1b-492e-ae4a-9a827a6afdcd.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 손목 록의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-2681": {
+  "source": "wger",
+  "ref": 2681,
+  "urls": [
+   "https://wger.de/media/exercise-images/2681/d4f89553-c920-4748-8302-9bd30b4f4c4d.png",
+   "https://wger.de/media/exercise-images/2681/c787822b-e5ad-415b-a686-af2f18133b3c.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 스캐퓰라 푸시업의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "kettlebell-swing": {
+  "source": "wger",
+  "ref": 960,
+  "urls": [
+   "https://wger.de/media/exercise-images/960/da4d0560-da89-4bb5-b91f-746458fb04ad.png"
+  ],
+  "approx": false,
+  "note": "기본 KB 루틴: 기존 wger 960 Kettlebell Swing 유지. 양손 힙힌지 스윙이며 fedb 한 손 스윙으로 대체하지 않음."
+ },
+ "kettlebell-curl": {
+  "source": "wger",
+  "ref": 975,
+  "urls": [
+   "https://wger.de/media/exercise-images/975/41d9267a-99bc-4e94-b1c4-0e39fe7a968f.png"
+  ],
+  "approx": false,
+  "note": "기본 KB 루틴: 기존 wger 975 one-handed kettlebell curls 유지. 한 손 케틀벨 팔꿈치 굽힘 동작 일치."
+ },
+ "wger-1003": {
+  "source": "wger",
+  "ref": 1003,
+  "urls": [
+   "https://wger.de/media/exercise-images/1003/772d6e47-3865-4944-9255-7435d0b06782.png",
+   "https://wger.de/media/exercise-images/1003/a2b47fa8-79b4-4a21-920b-48765f562bc4.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 케틀벨 데드리프트의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1022": {
+  "source": "wger",
+  "ref": 1022,
+  "urls": [
+   "https://wger.de/media/exercise-images/1022/f74644fa-f43e-46bd-8603-6e3a2ee8ee2d.jpg",
+   "https://wger.de/media/exercise-images/1022/eef8fb9d-ae72-4e23-81da-4d62f2734332.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 케틀벨 플랭크 로우의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1612": {
+  "source": "wger",
+  "ref": 1612,
+  "urls": [
+   "https://wger.de/media/exercise-images/1612/3dc33f57-2786-4305-8b91-e011d7055923.jpg",
+   "https://wger.de/media/exercise-images/1612/e719b872-d122-4e2d-be17-bd2babfe457a.jpg"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 케틀벨 스모 데드리프트의 기존 연결 동작. 기존 두 이미지 순서 유지(좌우 변형은 시작·끝 단계가 아니므로 다운로드 검토 시 확인)."
+ },
+ "wger-1641": {
+  "source": "wger",
+  "ref": 1641,
+  "urls": [
+   "https://wger.de/media/exercise-images/1641/68d9488d-2596-420f-be0f-52aa70732c83.webp"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 케틀벨 싱글렉 데드리프트의 기존 연결 동작."
+ },
+ "wger-1734": {
+  "source": "wger",
+  "ref": 1734,
+  "urls": [
+   "https://wger.de/media/exercise-images/1734/782e2fbb-1267-476d-a817-14f3b83e0564.png"
+  ],
+  "approx": false,
+  "note": "기존 wger 이미지 유지: 케틀벨 런지의 기존 연결 동작."
+ },
+ "crunch": {
+  "source": "fedb",
+  "ref": "Crunches",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunches/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunches/1.jpg"
+  ],
+  "approx": false,
+  "note": "검토자 수정: wger 그림은 다리를 벤치에 올린 변형이라 바닥 크런치 사진으로 교체."
+ },
+ "leg-raise": {
+  "source": "wger",
+  "ref": 377,
+  "urls": [
+   "https://wger.de/media/exercise-images/125/Leg-raises-2.png",
+   "https://wger.de/media/exercise-images/125/Leg-raises-1.png"
+  ],
+  "approx": false,
+  "note": "기본 복근 루틴: 바닥에 누워 두 다리를 드는 Leg Raises, Lying. main 우선이 아닌 파일 번호 1→2로 시작·끝 정렬. 검토자 수정: 다리 내린 자세가 시작이 되도록 순서 반전."
+ },
+ "pistol-squat": {
+  "source": "wger",
+  "ref": 456,
+  "urls": [
+   "https://wger.de/media/exercise-images/456/3b681e59-377b-40db-9113-ca5873ce084b.jpg"
+  ],
+  "approx": false,
+  "note": "기본 KB 루틴: 맨몸 Pistol Squat으로 반대 다리를 앞으로 뻗는 한 발 스쿼트. wger 대표/다음 사진 2장 선택; UUID 파일명이라 시작→끝 순서는 다운로드 검토자가 시각 확인 필요. 검토자 수정: 두 장이 거의 같아 1장만."
+ },
+ "goblet-squat": {
+  "source": "fedb",
+  "ref": "Goblet_Squat",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/1.jpg"
+  ],
+  "approx": false,
+  "note": "검토자 수정: 덤벨 사진 대신 케틀벨 고블릿 스쿼트(fedb, kettlebells)."
+ },
+ "kettlebell-pushup": {
+  "source": "fedb",
+  "ref": "Plyo_Kettlebell_Pushups",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plyo_Kettlebell_Pushups/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plyo_Kettlebell_Pushups/1.jpg"
+  ],
+  "approx": true,
+  "note": "검토자 수정: 기존 이미지는 AI 생성풍 일러스트라 제외. 케틀벨을 짚은 푸시업 사진(플라이오 변형)."
+ },
+ "wger-292": {
+  "source": "wger",
+  "ref": 265,
+  "urls": [
+   "https://wger.de/media/exercise-images/265/7528acb4-b2cc-4b75-b6ae-d514cbd4f78b.png"
+  ],
+  "approx": false,
+  "note": "누워 무릎을 굽히고 골반을 올리는 Glute Bridge의 wger 대표 이미지."
+ },
+ "wger-1314": {
+  "source": "wger",
+  "ref": 320,
+  "urls": [
+   "https://wger.de/media/exercise-images/320/6c9124b6-3551-47a8-9c22-20141c8b9c53.png",
+   "https://wger.de/media/exercise-images/320/85a075aa-53ff-4d61-bad3-5f47e14e0f8e.png"
+  ],
+  "approx": false,
+  "note": "Jumping Jacks: 양발을 벌리며 팔을 머리 위로 올리는 점핑잭."
+ },
+ "bicycle-crunch": {
+  "source": "fedb",
+  "ref": "Air_Bike",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Air_Bike/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Air_Bike/1.jpg"
+  ],
+  "approx": false,
+  "note": "기본 복근 루틴: 누워 반대 팔꿈치와 무릎을 번갈아 가까이 하는 바이시클 크런치와 Air Bike가 일치. fedb 0→1 순서."
+ },
+ "heel-touch": {
+  "source": "fedb",
+  "ref": "Alternate_Heel_Touchers",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Heel_Touchers/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Heel_Touchers/1.jpg"
+  ],
+  "approx": false,
+  "note": "기본 복근 루틴: 누워 무릎을 굽히고 상체를 옆으로 기울여 발뒤꿈치를 번갈아 터치. fedb 0→1 순서."
+ },
+ "kettlebell-shoulder-press": {
+  "source": "fedb",
+  "ref": "One-Arm_Kettlebell_Military_Press_To_The_Side",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Military_Press_To_The_Side/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Military_Press_To_The_Side/1.jpg"
+  ],
+  "approx": false,
+  "note": "검토자 수정: 덤벨 그림 대신 한 팔 케틀벨 프레스 사진."
+ },
+ "kettlebell-snatch-catch": {
+  "source": "fedb",
+  "ref": "One-Arm_Kettlebell_Snatch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Snatch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Snatch/1.jpg"
+  ],
+  "approx": false,
+  "note": "기본 KB 루틴: 한 손 스윙에서 머리 위 팔을 편 자세로 받는 스내치. 던지거나 손잡이를 놓는 캐치가 아님. fedb 0→1 순서."
+ },
+ "kettlebell-triceps-extension": {
+  "source": "wger",
+  "ref": 1336,
+  "urls": [
+   "https://wger.de/media/exercise-images/1336/ebf88217-df26-4ef7-94cb-f0c2220c6abe.webp"
+  ],
+  "approx": true,
+  "note": "기본 KB 루틴: 머리 위에서 팔꿈치를 굽혀 중량을 머리 뒤로 내렸다 펴는 패턴 일치. 덤벨과 케틀벨의 장비·그립 차이. fedb Kettlebell_Overhead_Triceps_Extension은 images가 비어 있어 제외."
+ },
+ "wger-112": {
+  "source": "fedb",
+  "ref": "Body-Up",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Body-Up/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Body-Up/1.jpg"
+  ],
+  "approx": false,
+  "note": "전완 플랭크에서 팔꿈치를 펴 손바닥 지지로 올라오는 바디업. fedb 0→1 순서."
+ },
+ "wger-314": {
+  "source": "fedb",
+  "ref": "Isometric_Wipers",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Wipers/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Wipers/1.jpg"
+  ],
+  "approx": false,
+  "note": "넓은 푸시업 자세에서 한쪽으로 체중을 옮기는 와이퍼 동작. fedb 0→1 순서."
+ },
+ "wger-985": {
+  "source": "fedb",
+  "ref": "Push_Up_to_Side_Plank",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push_Up_to_Side_Plank/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push_Up_to_Side_Plank/1.jpg"
+  ],
+  "approx": false,
+  "note": "푸시업 후 몸을 옆으로 회전해 한 팔 지지하는 동일 순서. fedb 0→1 순서."
+ },
+ "wger-994": {
+  "source": "fedb",
+  "ref": "Arm_Circles",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arm_Circles/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arm_Circles/1.jpg"
+  ],
+  "approx": false,
+  "note": "선 자세에서 편 팔로 원을 그리는 암 서클. fedb 0→1 순서."
+ },
+ "wger-996": {
+  "source": "fedb",
+  "ref": "Mountain_Climbers",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/1.jpg"
+  ],
+  "approx": false,
+  "note": "하이 플랭크에서 무릎을 번갈아 가슴 쪽으로 당김. fedb 0→1 순서."
+ },
+ "wger-1004": {
+  "source": "fedb",
+  "ref": "Elbow_Circles",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbow_Circles/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbow_Circles/1.jpg"
+  ],
+  "approx": false,
+  "note": "손을 어깨 쪽에 놓고 굽힌 팔꿈치로 원을 그리는 어깨 돌리기. fedb 0→1 순서."
+ },
+ "wger-1008": {
+  "source": "fedb",
+  "ref": "Side_Neck_Stretch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/1.jpg"
+  ],
+  "approx": false,
+  "note": "손으로 머리를 가볍게 받치며 목 옆을 늘리는 스트레칭. fedb 0→1 순서."
+ },
+ "wger-1010": {
+  "source": "fedb",
+  "ref": "Chin_To_Chest_Stretch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/1.jpg"
+  ],
+  "approx": false,
+  "note": "턱을 가슴 쪽으로 숙여 목 뒤를 늘리는 동작. fedb 0→1 순서."
+ },
+ "wger-1103": {
+  "source": "fedb",
+  "ref": "Inchworm",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Inchworm/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Inchworm/1.jpg"
+  ],
+  "approx": false,
+  "note": "서서 손으로 앞으로 걸어 플랭크를 만드는 인치웜. fedb 0→1 순서."
+ },
+ "wger-1201": {
+  "source": "fedb",
+  "ref": "Crossover_Reverse_Lunge",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/1.jpg"
+  ],
+  "approx": false,
+  "note": "한 발을 반대쪽 뒤로 교차하는 리버스 런지. fedb 0→1 순서."
+ },
+ "wger-1240": {
+  "source": "fedb",
+  "ref": "Standing_Soleus_And_Achilles_Stretch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Soleus_And_Achilles_Stretch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Soleus_And_Achilles_Stretch/1.jpg"
+  ],
+  "approx": false,
+  "note": "서서 뒤 무릎을 굽히고 뒤꿈치를 붙여 가자미근을 늘림. fedb 0→1 순서."
+ },
+ "wger-1293": {
+  "source": "fedb",
+  "ref": "Single-Arm_Push-Up",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Arm_Push-Up/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Arm_Push-Up/1.jpg"
+  ],
+  "approx": false,
+  "note": "한 팔로 지지하며 몸통을 유지하는 원암 푸시업. fedb 0→1 순서."
+ },
+ "wger-1312": {
+  "source": "fedb",
+  "ref": "Bodyweight_Squat",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/1.jpg"
+  ],
+  "approx": false,
+  "note": "추가 중량 없이 양발로 수행하는 기본 스쿼트. fedb 0→1 순서."
+ },
+ "wger-1373": {
+  "source": "fedb",
+  "ref": "Front_Box_Jump",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Box_Jump/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Box_Jump/1.jpg"
+  ],
+  "approx": false,
+  "note": "박스 앞에서 양발로 점프해 박스 위에 착지. fedb 0→1 순서."
+ },
+ "wger-1390": {
+  "source": "fedb",
+  "ref": "Standing_Toe_Touches",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Toe_Touches/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Toe_Touches/1.jpg"
+  ],
+  "approx": false,
+  "note": "서서 고관절을 접고 손을 발끝 쪽으로 내리는 동작. fedb 0→1 순서."
+ },
+ "wger-1393": {
+  "source": "fedb",
+  "ref": "Seated_Floor_Hamstring_Stretch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Floor_Hamstring_Stretch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Floor_Hamstring_Stretch/1.jpg"
+  ],
+  "approx": false,
+  "note": "바닥에 앉아 한 다리를 펴고 반대 무릎을 굽혀 편 다리 쪽으로 숙임. fedb 0→1 순서."
+ },
+ "wger-1740": {
+  "source": "fedb",
+  "ref": "Single_Leg_Glute_Bridge",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Glute_Bridge/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Glute_Bridge/1.jpg"
+  ],
+  "approx": false,
+  "note": "누워 한 다리로 지지하며 골반을 드는 싱글렉 브리지. fedb 0→1 순서."
+ },
+ "wger-1772": {
+  "source": "fedb",
+  "ref": "Reverse_Crunch",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Crunch/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Crunch/1.jpg"
+  ],
+  "approx": false,
+  "note": "누워 무릎을 당기며 골반을 말아 올리는 리버스 크런치. fedb 0→1 순서."
+ },
+ "wger-1774": {
+  "source": "fedb",
+  "ref": "Bench_Dips",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Dips/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Dips/1.jpg"
+  ],
+  "approx": false,
+  "note": "몸 뒤 의자/벤치를 손으로 짚어 팔꿈치를 굽히고 펴는 딥스. fedb 0→1 순서."
+ },
+ "wger-1912": {
+  "source": "fedb",
+  "ref": "Russian_Twist",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Russian_Twist/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Russian_Twist/1.jpg"
+  ],
+  "approx": false,
+  "note": "앉아서 몸통을 좌우로 회전하는 맨몸 러시안 트위스트. 장비가 불명확한 wger 1193 대신 맨몸 항목 선택. fedb 0→1 순서."
+ },
+ "wger-1964": {
+  "source": "fedb",
+  "ref": "Push-Up_Wide",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push-Up_Wide/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push-Up_Wide/1.jpg"
+  ],
+  "approx": false,
+  "note": "손을 어깨보다 넓게 짚는 푸시업. fedb 0→1 순서."
+ },
+ "wger-1361": {
+  "source": "fedb",
+  "ref": "Front_Squats_With_Two_Kettlebells",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Squats_With_Two_Kettlebells/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Squats_With_Two_Kettlebells/1.jpg"
+  ],
+  "approx": false,
+  "note": "케틀벨 두 개를 앞 랙 자세에 받친 프런트 스쿼트. fedb 0→1 순서."
+ },
+ "wger-1970": {
+  "source": "fedb",
+  "ref": "Kettlebell_Sumo_High_Pull",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Sumo_High_Pull/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Sumo_High_Pull/1.jpg"
+  ],
+  "approx": false,
+  "note": "넓게 서서 양손 케틀벨을 고관절 힘으로 몸 가까이 당김. fedb 0→1 순서."
+ },
+ "wger-2689": {
+  "source": "fedb",
+  "ref": "Cocoons",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cocoons/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cocoons/1.jpg"
+  ],
+  "approx": false,
+  "note": "누워 팔과 다리를 폈다가 상체와 무릎을 함께 모으는 니턱 브이업. fedb 0→1 순서."
+ },
+ "wger-580": {
+  "source": "fedb",
+  "ref": "Side_Bridge",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Bridge/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Bridge/1.jpg"
+  ],
+  "approx": false,
+  "note": "전완과 발 옆면으로 지지해 골반을 들어 몸통을 일직선으로 만드는 사이드 브리지/사이드 플랭크. fedb 0→1 순서."
+ },
+ "wger-1948": {
+  "source": "fedb",
+  "ref": "Single-Leg_High_Box_Squat",
+  "urls": [
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_High_Box_Squat/0.jpg",
+   "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_High_Box_Squat/1.jpg"
+  ],
+  "approx": true,
+  "note": "한 발로 지지해 박스에 앉았다 일어나는 스쿼트. 높은 박스와 앱의 의자 높이 차이를 참고. fedb 0→1 순서."
+ }
+}

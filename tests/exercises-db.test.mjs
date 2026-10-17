@@ -16,7 +16,7 @@ test('exercise DB has complete typed fields, unique IDs and Korean instructions'
   assert.equal(byId.size, db.length);
   assert.equal(new Set(db.map(item => item.ko)).size, db.length);
   for (const item of db) {
-    assert.deepEqual(Object.keys(item).sort(), ['id', 'ko', 'en', 'category', 'equipment', 'muscles', 'steps', 'tips', 'images', 'source', 'wgerIds'].sort());
+    assert.deepEqual(Object.keys(item).sort(), ['id', 'ko', 'en', 'category', 'equipment', 'muscles', 'steps', 'tips', 'images', 'source', 'wgerIds', ...(item.images.length ? ['imageSource'] : [])].sort());
     for (const key of ['id', 'ko', 'en']) assert.ok(typeof item[key] === 'string' && item[key].trim(), `${item.id}.${key}`);
     assert.ok(categories.includes(item.category), item.id);
     assert.ok(['맨몸', '케틀벨', '불가리안백'].includes(item.equipment), item.id);
@@ -27,7 +27,7 @@ test('exercise DB has complete typed fields, unique IDs and Korean instructions'
     assert.ok(Array.isArray(item.tips) && item.tips.length >= 1 && item.tips.length <= 3, item.id);
     for (const sentence of [...item.steps, ...item.tips]) assert.ok(typeof sentence === 'string' && /[가-힣]/u.test(sentence), item.id);
     assert.ok(Array.isArray(item.images));
-    for (const image of item.images) assert.equal(new URL(image).origin, 'https://wger.de');
+    item.images.forEach((image, i) => assert.equal(image, `images/${item.id}-${i + 1}.jpg`));
     assert.ok(Array.isArray(item.wgerIds));
     assert.equal(new Set(item.wgerIds).size, item.wgerIds.length);
     assert.ok(item.wgerIds.every(id => Number.isInteger(id) && sourceById.has(id)));
@@ -63,7 +63,7 @@ test('left/right variants and forbidden equipment are removed, including mislabe
   assert.deepEqual(byId.get('wger-988').wgerIds, [988, 989]);
 });
 
-test('all source records are reviewed exactly once; source images are preserved', () => {
+test('all source records are reviewed exactly once; existing illustrated exercises stay mapped', () => {
   const referenced = db.flatMap(item => item.wgerIds);
   assert.equal(new Set(referenced).size, referenced.length);
   for (const record of original) assert.equal(Number(referenced.includes(record.id)) + Number(Object.hasOwn(excluded, record.id)), 1, record.name);
@@ -72,7 +72,10 @@ test('all source records are reviewed exactly once; source images are preserved'
     assert.ok(typeof reason === 'string' && reason.length > 0);
   }
   for (const item of db.filter(item => item.source === 'wger')) {
-    assert.deepEqual(item.images, [...new Set(item.wgerIds.flatMap(id => sourceById.get(id).images))]);
+    if (item.wgerIds.some(id => sourceById.get(id).images.length)) {
+      assert.ok(item.images.length);
+      assert.equal(item.imageSource.source, 'wger');
+    }
   }
 });
 
@@ -90,4 +93,33 @@ test('Bulgarian bag entries are app-authored with safe spin and throw cues', () 
     assert.deepEqual(item.images, []);
     if (/스핀|스로/.test(item.ko)) assert.ok(item.tips.some(tip => tip.includes('가벼운 무게로 시작, 주변 공간 확보')));
   }
+});
+
+ test('image map references, URL count, metadata and download list are consistent', async () => {
+  const map = JSON.parse(await readFile(new URL('../data/image-map.json', import.meta.url), 'utf8'));
+  const wger = JSON.parse(await readFile(new URL('../data/sources/wger-images.json', import.meta.url), 'utf8'));
+  const fedb = JSON.parse(await readFile(new URL('../data/sources/free-exercise-db.json', import.meta.url), 'utf8'));
+  const expected = [];
+  for (const [id, entry] of Object.entries(map)) {
+    assert.ok(byId.has(id), id);
+    assert.ok(entry.urls.length >= 1 && entry.urls.length <= 2, id);
+    assert.equal(typeof entry.approx, 'boolean');
+    assert.ok(entry.note.trim());
+    const source = (entry.source === 'wger' ? wger : fedb).find(x => x.id === entry.ref);
+    assert.ok(source, id);
+    const allowed = entry.source === 'wger' ? wger.flatMap(x => x.images.map(i => i.url)) : source.images.map(p => `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${p}`);
+    entry.urls.forEach((url, i) => {
+      assert.ok(allowed.includes(url), id);
+      expected.push(`${url}\timages/${id}-${i + 1}.jpg`);
+    });
+    assert.equal(byId.get(id).imageSource.ref, entry.ref);
+    assert.equal(byId.get(id).imageSource.approx, entry.approx);
+    assert.equal(byId.get(id).imageSource.license, entry.source === 'wger' ? 'CC-BY-SA 4.0' : 'Unlicense');
+  }
+  const { execFileSync } = await import('node:child_process');
+  assert.equal(execFileSync(process.execPath, ['tools/build-exercises.mjs', '--image-list'], { encoding: 'utf8' }), expected.join('\n') + '\n');
+  const required = [...new Set(defaults().routines.flatMap(r => r.exercises.map(e => e.exerciseId)))];
+  assert.equal(required.length, 12);
+  console.log('필수 12개 매핑: ' + required.filter(id => map[id]).map(id => `${id} (approx: ${map[id].approx})`).join(', '));
+  assert.ok(required.every(id => map[id]));
 });

@@ -82,7 +82,7 @@ test('메모 목록 → 항목 상세, 자동 저장, 이동·삭제와 이미�
   const routine = data.routines[0];
   const entry = routine.exercises[0];
   const id = entry.id;
-  globalThis.fetch = async () => ({ ok: true, json: async () => [{ id: entry.exerciseId, ko: '테스트', en: 'Test', category: '복근', equipment: '맨몸', muscles: [], steps: ['동작'], tips: ['주의'], images: ['https://wger.de/test.png'] }] });
+  globalThis.fetch = async () => ({ ok: true, json: async () => [{ id: entry.exerciseId, ko: '테스트', en: 'Test', category: '복근', equipment: '맨몸', muscles: [], steps: ['동작'], tips: ['주의'], images: ['images/test-1.jpg', 'images/test-2.jpg'], imageSource: { source: 'fedb', license: 'Unlicense', approx: true } }] });
   let saves = 0;
   let confirmation;
   try {
@@ -100,9 +100,12 @@ test('메모 목록 → 항목 상세, 자동 저장, 이동·삭제와 이미�
     assert.ok(note); note.value = '무릎 주의'; note.events.input(); memo.flush();
     assert.equal(entry.note, '무릎 주의'); assert.ok(saves > 0);
     const img = descendants(view).find(node => node.tag === 'img');
-    assert.ok(descendants(view).some(node => node.textContent === '이미지는 인터넷 연결 시에만 보여요'));
+    assert.ok(descendants(view).some(node => node.textContent === '시작'));
+    assert.ok(descendants(view).some(node => node.textContent === '끝'));
+    assert.ok(descendants(view).some(node => node.textContent === '비슷한 동작 참고 이미지'));
+    assert.ok(descendants(view).some(node => node.textContent === '이미지: free-exercise-db (Unlicense)'));
     img.events.error();
-    assert.ok(descendants(view).some(node => node.textContent === '인터넷에 연결되면 이미지가 표시돼요'));
+    assert.ok(descendants(view).some(node => node.textContent === '시작: 이미지를 불러오지 못했어요'));
     assert.ok(!descendants(view).some(node => node.textContent === '목록에서 숨기기'));
     memo.showDetail(entry.exerciseId);
     assert.ok(descendants(nodes['exercise-detail']).some(node => node.tag === 'img'));

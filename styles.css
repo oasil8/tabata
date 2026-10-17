@@ -723,6 +723,10 @@ body:has(#timer-view:not([hidden])) #message {
 }
 .exercise-description { overflow-wrap: anywhere; }
 .exercise-image { margin: 16px 0; text-align: center; }
+.exercise-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.exercise-images .exercise-image { min-width: 0; }
+.image-credit { color: #999; font-size: 12px; line-height: 1.6; }
+@media (max-width: 480px) { .exercise-images { grid-template-columns: 1fr; } }
 .exercise-image figcaption { color: #999; font-size: 12px; line-height: 1.6; }
 .image-failed { min-height: 100px; display: grid; place-items: center; background: #222; border-radius: 12px; padding: 16px; }
 .compact-row { padding: 0; margin: 6px 0; }

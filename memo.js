@@ -37,6 +37,8 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
   let databaseError = '';
   let routineId = null;
   let screen = 'list';
+  // 종목을 추가해 화면을 다시 그려도 검색어·칩·목록 스크롤이 유지되게 보관한다.
+  let searchState = { query: '', category: '전체', scroll: 0 };
   let entryId = null;
   let editing = false;
   let saveTimer;
@@ -78,20 +80,32 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
     target.append(el('h2', item.ko));
     if (item.en) target.append(el('p', item.en));
     if (!custom) target.append(el('p', [item.category, item.equipment, ...item.muscles].join(' · ')));
-    for (const url of item.images || []) {
+    const images = item.images || [];
+    const gallery = el('div', undefined, 'exercise-images');
+    for (const [index, url] of images.entries()) {
       const area = el('figure', undefined, 'exercise-image');
       const image = el('img');
-      const status = el('figcaption', '이미지는 인터넷 연결 시에만 보여요');
-      image.alt = `${item.ko} 동작`;
+      const label = images.length === 2 ? ['시작', '끝'][index] : '';
+      const status = el('figcaption', label);
+      image.alt = `${item.ko} ${label || '동작'}`;
       image.loading = 'lazy';
       image.addEventListener('error', () => {
         image.hidden = true;
-        status.textContent = '인터넷에 연결되면 이미지가 표시돼요';
+        status.textContent = `${label ? `${label}: ` : ''}이미지를 불러오지 못했어요`;
         area.className = 'exercise-image image-failed';
       });
       image.src = url;
       area.append(image, status);
-      target.append(area);
+      gallery.append(area);
+    }
+    if (images.length) {
+      target.append(gallery);
+      const source = item.imageSource;
+      if (source?.approx) target.append(el('p', '비슷한 동작 참고 이미지', 'image-credit'));
+      if (source) {
+        target.append(el('p', `이미지: ${source.source === 'wger' ? 'wger.de' : 'free-exercise-db'} (${source.license})`, 'image-credit'));
+        if (source.author) target.append(el('p', `이미지 저자: ${source.author}`, 'image-credit'));
+      }
     }
     for (const [title, lines, tag] of [['동작 순서', item.steps, 'ol'], ['주의점', item.tips, 'ul']]) {
       target.append(el('h3', title));
@@ -146,17 +160,27 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
       return;
     }
     routine.exercises.push({ id: crypto.randomUUID(), name: item.ko, exerciseId: item.id, note: '' });
+    // 위쪽 운동 순서에 한 줄이 늘어도 검색 영역이 화면에서 제자리에 있도록 늘어난 만큼 스크롤을 보정한다.
+    const before = view.querySelector('.exercise-search')?.getBoundingClientRect().top;
     commit(); render();
+    const after = view.querySelector('.exercise-search')?.getBoundingClientRect().top;
+    if (before !== undefined && after !== undefined && after !== before) {
+      document.scrollingElement.scrollTop += after - before;
+      view.scrollTop += after - before;
+    }
   }
   function renderSearch(routine) {
     const area = el('section', undefined, 'exercise-search');
     area.append(el('h2', '종목 추가'));
-    const [searchLabel, search] = input('한국어 / 영어 검색', '', 100);
+    const [searchLabel, search] = input('한국어 / 영어 검색', searchState.query, 100);
     search.type = 'search';
     const chips = el('div', undefined, 'filter-chips');
     const results = el('div', undefined, 'search-results');
-    let category = '전체';
+    let category = searchState.category;
+    results.addEventListener('scroll', () => { searchState.scroll = results.scrollTop; });
     function resultsFor() {
+      searchState.query = search.value;
+      searchState.category = category;
       const query = search.value.trim().toLocaleLowerCase();
       const candidates = category === '내 종목' ? getData().customExercises : all();
       const matches = candidates.filter(item => (category === '전체' || category === '내 종목'
@@ -178,17 +202,19 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
         category = value;
         for (const child of chips.children) child.setAttribute('aria-pressed', String(child === chip));
         resultsFor();
+        results.scrollTop = searchState.scroll = 0;
       });
       chip.setAttribute('aria-pressed', String(value === category));
       chips.append(chip);
     }
-    search.addEventListener('input', resultsFor);
+    search.addEventListener('input', () => { resultsFor(); results.scrollTop = searchState.scroll = 0; });
     // 검색에 원하는 종목이 없을 때를 대비해 항상 보이는 직접 추가 버튼. 검색어가 있으면 이름으로 미리 채운다.
     const direct = button('＋ 내 종목 만들기', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)));
     direct.className = 'direct-add';
     area.append(searchLabel, chips, results, el('p', '찾는 종목이 없으면 직접 만들 수 있어요', 'create-hint'), direct);
     resultsFor();
     view.append(area);
+    results.scrollTop = searchState.scroll;
   }
   function entryActions(routine, entry) {
     const index = routine.exercises.indexOf(entry);
@@ -294,7 +320,7 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
     else {
       screen = 'list';
       view.append(el('h1', '루틴 메모'));
-      for (const item of getData().routines) view.append(button(item.name, () => { routineId = item.id; editing = false; screen = 'routine'; render(); }));
+      for (const item of getData().routines) view.append(button(item.name, () => { routineId = item.id; editing = false; searchState = { query: '', category: '전체', scroll: 0 }; screen = 'routine'; render(); }));
       if (!getData().routines.length) view.append(el('p', '타이머 편집에서 루틴을 먼저 만들어 주세요.'));
       view.append(button('내 종목 관리', () => { screen = 'manage'; render(); }));
     }
@@ -307,15 +333,17 @@ export function createMemo({ getData, save, choose, changed, showSheet }) {
         '다시 설치했거나 새 폰이라면 편집 → 백업 → 가져오기에서 백업 파일을 고르면 그대로 돌아와요.',
         '업데이트는 따로 설치할 필요가 없어요. 인터넷이 연결된 상태에서 앱을 완전히 닫았다가(앱 전환 화면에서 위로 밀기) 다시 열면 새 버전이 적용돼요. 운동 중이 아닐 때 앱을 다시 열면 자동으로 새 버전이 적용돼요.',
         '항상 홈 화면 아이콘으로 실행하세요. 사파리 탭에서 쓰면 한동안 안 열었을 때 데이터가 지워질 수 있어요.',
-        '처음 한 번만 인터넷이 필요하고 그 뒤로는 오프라인에서도 동작해요. 종목 이미지는 인터넷이 있을 때만 보여요.',
+        '처음 한 번 인터넷에 연결해 앱과 이미지를 저장하면 오프라인에서도 사용할 수 있어요. 아직 저장하지 못한 이미지는 연결 후 다시 열어 주세요.',
       ]) notes.append(el('li', text));
       info.append(el('h2', '꼭 알아두세요'), notes);
     }
     info.append(el('h2', '정보'), el('p', '운동 정보 일부 출처: wger.de (CC-BY-SA 4.0), 한국어 번역·편집'), link('wger.de', 'https://wger.de/'), link('CC-BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/'));
+    info.append(el('p', '종목 이미지는 앱에 포함되며 한 번 저장하면 오프라인에서도 표시됩니다. 이미지 출처: wger.de (CC-BY-SA 4.0), free-exercise-db (Unlicense).'), link('free-exercise-db (Unlicense)', 'https://github.com/yuhonas/free-exercise-db'));
     view.append(info);
   }
   load();
   function home() {
+    searchState = { query: '', category: '전체', scroll: 0 };
     routineId = null;
     entryId = null;
     editing = false;

@@ -1,5 +1,5 @@
 // Curated Korean translation/adaptation of data/wger-exercises.en.json.
-// wger-derived content: CC-BY-SA 4.0. Original IDs and image URLs are preserved.
+// wger-derived content: CC-BY-SA 4.0. Image provenance lives in data/image-map.json.
 // Format: original IDs | Korean name | ordered steps (~ separated) | tips | category override | English override.
 import { readFile, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -7,6 +7,9 @@ import { resolve } from 'node:path';
 
 const original = JSON.parse(await readFile(new URL('../data/wger-exercises.en.json', import.meta.url), 'utf8'));
 const byId = new Map(original.map(item => [item.id, item]));
+const imageMap = JSON.parse(await readFile(new URL('../data/image-map.json', import.meta.url), 'utf8'));
+const wgerImages = JSON.parse(await readFile(new URL('../data/sources/wger-images.json', import.meta.url), 'utf8'));
+const fedbImages = JSON.parse(await readFile(new URL('../data/sources/free-exercise-db.json', import.meta.url), 'utf8'));
 const categories = { Abs: '복근', Chest: '가슴', Arms: '팔', Shoulders: '어깨', Back: '등', Legs: '하체', Calves: '종아리', Cardio: '유산소' };
 const muscleNames = { Shoulders: '어깨', Calves: '종아리', Chest: '가슴', Abs: '복근', 'Serratus anterior': '전거근', Soleus: '가자미근', Triceps: '삼두근', 'Obliquus externus abdominis': '외복사근', Trapezius: '승모근', Glutes: '둔근', Quads: '대퇴사두근', Lats: '광배근', Biceps: '이두근', Hamstrings: '햄스트링', Brachialis: '상완근' };
 const seedIds = { 1412: 'bicycle-crunch', 1411: 'heel-touch', 9: 'kettlebell-swing', 1020: 'pistol-squat', 975: 'kettlebell-curl' };
@@ -271,8 +274,24 @@ function build() {
     if (!used.has(record.id) && !excluded[record.id]) throw new Error(`Unreviewed source record ${record.id}: ${record.name}`);
   }
   exercises.push(...appExercises);
+  for (const id of Object.keys(imageMap)) {
+    if (!exercises.some(item => item.id === id)) throw new Error(`Unknown image map id ${id}`);
+  }
   for (const item of exercises) {
     if (!item.category || item.steps.length < 3 || item.steps.length > 6 || item.tips.length < 1 || item.tips.length > 3) throw new Error(`Invalid exercise ${item.id}`);
+    const mapping = imageMap[item.id];
+    item.images = [];
+    if (!mapping) continue;
+    const { source, ref, urls, approx, note } = mapping;
+    const record = (source === 'wger' ? wgerImages : fedbImages).find(row => row.id === ref);
+    if (!['wger', 'fedb'].includes(source) || !record || !Array.isArray(urls) || urls.length < 1 || urls.length > 2 || new Set(urls).size !== urls.length || typeof approx !== 'boolean' || !note?.trim()) throw new Error(`Invalid image mapping ${item.id}`);
+    // Merged legacy entries can include both left/right source records.
+    const images = source === 'wger' ? wgerImages.flatMap(row => row.images).filter(image => urls.includes(image.url)) : [];
+    const allowed = source === 'wger' ? images.map(image => image.url) : record.images.map(path => `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${path}`);
+    if (!urls.every(url => allowed.includes(url))) throw new Error(`Unknown image URL ${item.id}`);
+    item.images = urls.map((_, index) => `images/${item.id}-${index + 1}.jpg`);
+    const author = [...new Set(images.map(image => image.author).filter(Boolean))].join(', ');
+    item.imageSource = { source, ref, ...(author ? { author } : {}), license: source === 'wger' ? 'CC-BY-SA 4.0' : 'Unlicense', approx };
   }
   return exercises;
 }
@@ -318,6 +337,12 @@ const appExercises = [
 
 export const exercises = build();
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  await writeFile(new URL('../data/exercises.json', import.meta.url), `[\n${exercises.map(item => JSON.stringify(item)).join(',\n')}\n]\n`);
-  console.log(`${exercises.length} exercises: ${exercises.filter(item => item.equipment === '맨몸').length} bodyweight, ${exercises.filter(item => item.equipment === '케틀벨').length} kettlebell, ${exercises.filter(item => item.equipment === '불가리안백').length} Bulgarian bag; ${exercises.filter(item => item.source === 'app').length} app-authored`);
+  if (process.argv.includes('--image-list')) {
+    for (const [id, mapping] of Object.entries(imageMap)) {
+      mapping.urls.forEach((url, index) => console.log(`${url}\timages/${id}-${index + 1}.jpg`));
+    }
+  } else {
+    await writeFile(new URL('../data/exercises.json', import.meta.url), `[\n${exercises.map(item => JSON.stringify(item)).join(',\n')}\n]\n`);
+    console.log(`${exercises.length} exercises: ${exercises.filter(item => item.equipment === '맨몸').length} bodyweight, ${exercises.filter(item => item.equipment === '케틀벨').length} kettlebell, ${exercises.filter(item => item.equipment === '불가리안백').length} Bulgarian bag; ${exercises.filter(item => item.source === 'app').length} app-authored`);
+  }
 }
