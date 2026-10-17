@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="타바타">
+  <title>타바타 · 나의 운동 시간</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <main>
+    <section id="timer-view" aria-label="타이머">
+      <header class="topbar"><button id="edit-button" class="quiet">편집</button><span class="brand">타바타<span class="brand-dot">●</span></span><button id="reset-button" class="quiet">리셋</button></header>
+      <div class="routine-heading"><p class="eyebrow">오늘도, 나만의 페이스로</p><h1 id="routine-title"></h1><p class="total">전체 <span id="total-time"></span></p></div>
+      <section id="clock-panel" class="clock-panel" data-phase="prepare" aria-label="현재 구간">
+        <div class="phase-line"><span id="phase">준비</span><span id="play-state">시작할 준비</span></div>
+        <div id="remaining" class="digits" role="timer" aria-live="off">00:10</div>
+        <div class="progress-track"><div id="progress"></div></div>
+      </section>
+      <section id="next-segment" class="next-segment" aria-label="다음 구간"><span>다음 구간</span><strong id="next-name">운동</strong><span id="next-time">00:20</span></section>
+      <section class="controls" aria-label="재생 제어"><div><strong id="rounds-left">8</strong><span>남은 라운드</span></div><button id="play-button" class="play-button">시작</button><div><strong id="cycles-left">1</strong><span>남은 사이클</span></div></section>
+      <p class="hint" id="timer-hint">시작하면 운동 전체의 안내 음성을 준비합니다.</p>
+    </section>
+    <section id="memo-view" class="empty-state" hidden><span class="empty-symbol">✎</span><h1>메모</h1><p>준비 중</p></section>
+    <p id="message" class="message" role="status" hidden></p>
+  </main>
+  <nav class="tabbar" aria-label="주 메뉴"><button id="timer-tab" aria-current="page"><span aria-hidden="true">◷</span>타이머</button><button id="memo-tab"><span aria-hidden="true">☷</span>메모</button></nav>
+  <dialog id="editor" aria-label="루틴 편집">
+    <form id="routine-form" novalidate>
+      <header class="editor-header"><button type="button" id="cancel-edit" class="quiet">취소</button><h2>루틴 편집</h2><button type="submit" class="quiet accent">저장</button></header>
+      <label class="name-label">루틴 이름<input id="routine-name" maxlength="60" required autocomplete="off"></label>
+      <div id="fields"></div>
+      <p id="editor-message" class="message" role="status" hidden></p>
+      <button type="button" id="new-routine" class="wide-button">＋ 새 타이머 추가</button>
+      <div class="list-heading"><h2>내 운동 목록</h2><span id="routine-count"></span></div>
+      <div id="routine-list"></div>
+      <section class="backup"><h2>백업</h2><p>이 기기에만 저장됩니다. 소중한 루틴을 파일로 보관하세요.</p><div class="button-row"><button type="button" id="export-button">내보내기</button><button type="button" id="import-button">가져오기</button></div><input id="import-file" type="file" accept="application/json,.json" hidden></section>
+    </form>
+  </dialog>
+  <dialog id="choice-dialog" class="choice-dialog" aria-labelledby="choice-title"><h2 id="choice-title"></h2><p id="choice-description"></p><div id="choice-actions" class="button-row"></div><button id="choice-cancel" class="wide-button">취소</button></dialog>
+  <audio id="workout-audio" preload="auto" playsinline></audio>
+</body>
+</html>
