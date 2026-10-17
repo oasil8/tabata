@@ -189,7 +189,9 @@ export function createMemo({ getData, save, choose, changed }) {
       chips.append(chip);
     }
     search.addEventListener('input', resultsFor);
-    area.append(searchLabel, chips, results);
+    // 검색에 원하는 종목이 없을 때를 대비해 항상 보이는 직접 추가 버튼. 검색어가 있으면 이름으로 미리 채운다.
+    const direct = button('＋ 목록에 없으면 직접 입력해서 추가', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)), 'wide-button');
+    area.append(searchLabel, direct, chips, results);
     resultsFor();
     view.append(area);
   }

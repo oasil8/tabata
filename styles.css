@@ -773,3 +773,8 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 @supports (font-size: 1cqw) {
   .digits { font-size: min(31cqw, 65cqh); }
 }
+
+.exercise-search .wide-button {
+  width: 100%;
+  margin: 8px 0 12px;
+}
