@@ -20,6 +20,47 @@ const click = (root, text) => {
   assert.ok(node, text); node.events.click();
 };
 
+test('장비·내 종목 필터와 공통 만들기 버튼', async () => {
+  const nodes = Object.fromEntries(['memo-view', 'exercise-detail', 'custom-editor'].map(id => [id, new Element('section')]));
+  const original = { document: globalThis.document, window: globalThis.window, fetch: globalThis.fetch };
+  globalThis.document = { createElement: tag => new Element(tag), getElementById: id => nodes[id], addEventListener() {} };
+  globalThis.window = { addEventListener() {} };
+  const data = defaults();
+  globalThis.fetch = async () => ({ ok: true, json: async () => [
+    { id: 'bag', ko: '백 스핀', en: 'Bag Spin', category: '어깨', equipment: '불가리안백' },
+    { id: 'kb', ko: '벨 스윙', en: 'Kettlebell Swing', category: '하체', equipment: '케틀벨' },
+    { id: 'fake', ko: '장비 아님', category: '불가리안백', equipment: '맨몸' }
+  ] });
+  try {
+    createMemo({ getData: () => data, save() {}, changed() {}, choose() {} });
+    await new Promise(resolve => setImmediate(resolve));
+    const view = nodes['memo-view'];
+    click(view, data.routines[0].name);
+    const chips = descendants(view).find(node => node.className === 'filter-chips');
+    assert.deepEqual(chips.children.slice(-3).map(node => node.textContent), ['케틀벨', '불가리안백', '내 종목']);
+    const results = () => descendants(view).find(node => node.className === 'search-results');
+    const names = () => results().children.filter(node => node.className === 'search-result').map(node => node.children[0].textContent);
+    click(view, '불가리안백'); assert.deepEqual(names(), ['백 스핀']);
+    click(view, '케틀벨'); assert.deepEqual(names(), ['벨 스윙']);
+    click(view, '내 종목');
+    assert.ok(descendants(view).some(node => node.textContent === '아직 만든 종목이 없어요'));
+    data.customExercises.push({ id: 'custom:test', ko: '내 스핀', steps: [], tips: [], videoUrl: '' });
+    click(view, '내 종목'); assert.deepEqual(names(), ['내 스핀']);
+    const search = descendants(view).find(node => node.type === 'search');
+    search.value = '없는 종목'; search.events.input();
+    assert.ok(descendants(results()).some(node => node.textContent === '검색 결과가 없어요'));
+    assert.equal(descendants(results()).filter(node => node.tag === 'button').length, 0);
+    assert.equal(descendants(view).filter(node => node.className === 'direct-add').length, 1);
+    click(view, '＋ 내 종목 만들기');
+    assert.equal(descendants(nodes['custom-editor']).find(node => node.tag === 'input').value, '없는 종목');
+    click(nodes['custom-editor'], '취소');
+    search.value = 'SPIN'; click(view, '전체'); assert.deepEqual(names(), ['백 스핀']);
+    data.hiddenExerciseIds.push('bag'); click(view, '불가리안백'); assert.deepEqual(names(), []);
+    click(view, '‹ 루틴 목록'); click(view, '내 종목 관리');
+    assert.equal(descendants(view).find(node => node.textContent === '＋ 내 종목 만들기').className, 'direct-add');
+  } finally { Object.assign(globalThis, original); }
+});
+
 test('메모 목록 → 항목 상세, 자동 저장, 이동·삭제와 이미지 실패 안내', async () => {
   const nodes = Object.fromEntries(['memo-view', 'exercise-detail', 'custom-editor'].map(id => [id, new Element('section')]));
   const original = { document: globalThis.document, window: globalThis.window, fetch: globalThis.fetch };

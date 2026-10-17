@@ -221,7 +221,7 @@ h1 {
 }
 
 .hint {
-  color: #888;
+  color: #aaa;
   font-size: 11px;
   line-height: 1.6;
   text-align: center;
@@ -249,7 +249,7 @@ h1 {
   border: 0;
   border-radius: 0;
   background: none;
-  color: #888;
+  color: #aaa;
   font-size: 11px;
 }
 
@@ -376,7 +376,7 @@ input {
 }
 
 .list-heading span {
-  color: #888;
+  color: #aaa;
   font-size: 12px;
 }
 
@@ -774,7 +774,7 @@ dialog, #memo-view { overflow-wrap: anywhere; }
   .digits { font-size: min(31cqw, 65cqh); }
 }
 
-.exercise-search .direct-add {
+.direct-add {
   display: block;
   width: 100%;
   margin: 10px 0 14px;
@@ -792,3 +792,36 @@ dialog, #memo-view { overflow-wrap: anywhere; }
   border-color: var(--yellow);
   color: #111;
 }
+
+/* 메모와 대화상자의 공통 간격. 타이머 높이에는 영향을 주지 않는다. */
+#memo-view > button { margin: 16px 0; }
+#memo-view > h1 { margin: 20px 0 24px; }
+#memo-view > h2 { margin: 24px 0 16px; }
+#memo-view > .memo-field { margin: 24px 0; }
+.exercise-search, .exercise-description { margin-top: 24px; }
+.exercise-search > h2, .exercise-description > h2 { margin: 0 0 16px; }
+.list-heading { gap: 12px; margin-top: 24px; margin-bottom: 12px; }
+.list-heading h2 { margin: 0; }
+.exercise-row h2 + .button-row { margin-top: 12px; }
+.exercise-row .button-row, .filter-chips { gap: 8px; }
+.search-result { margin: 8px 0; }
+.create-hint { color: #aaa; font-size: 12px; line-height: 1.6; margin: 12px 0 8px; }
+.direct-add, #memo-view > .direct-add { margin: 12px 0 24px; text-align: center; }
+.source-info { margin-top: 24px; padding-top: 16px; }
+.source-info h2 { margin: 0 0 12px; }
+#exercise-detail > button:first-child { margin-bottom: 20px; }
+#exercise-detail > h2, #custom-editor h2, .choice-dialog h2 { margin: 0 0 16px; }
+#exercise-detail h3, .exercise-description h3 { margin: 24px 0 12px; }
+#exercise-detail ol, #exercise-detail ul, .exercise-description ol, .exercise-description ul { padding-left: 24px; margin: 12px 0; }
+#custom-editor .memo-field { margin: 20px 0; }
+.custom-actions { margin-top: 24px; }
+.editor-header { margin-bottom: 24px; }
+.editor-header h2 { margin: 0; }
+.name-label { margin: 0 0 24px; }
+.field-row small { margin-top: 8px; }
+.number-wrap { gap: 8px; flex-shrink: 0; }
+.backup { margin-top: 24px; padding-top: 24px; }
+.backup h2 { margin: 0 0 12px; }
+.backup p, .choice-dialog p { margin: 12px 0 20px; }
+.choice-dialog .wide-button { margin-top: 24px; }
+.memo-field, .field-row > label { min-width: 0; }

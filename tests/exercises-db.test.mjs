@@ -19,7 +19,7 @@ test('exercise DB has complete typed fields, unique IDs and Korean instructions'
     assert.deepEqual(Object.keys(item).sort(), ['id', 'ko', 'en', 'category', 'equipment', 'muscles', 'steps', 'tips', 'images', 'source', 'wgerIds'].sort());
     for (const key of ['id', 'ko', 'en']) assert.ok(typeof item[key] === 'string' && item[key].trim(), `${item.id}.${key}`);
     assert.ok(categories.includes(item.category), item.id);
-    assert.ok(['맨몸', '케틀벨'].includes(item.equipment), item.id);
+    assert.ok(['맨몸', '케틀벨', '불가리안백'].includes(item.equipment), item.id);
     assert.ok(['app', 'wger'].includes(item.source));
     assert.ok(Array.isArray(item.muscles));
     assert.ok(item.muscles.every(muscle => typeof muscle === 'string' && /[가-힣]/u.test(muscle)));
@@ -40,7 +40,7 @@ test('every routine seed resolves to a DB item and required app entries exist', 
     for (const entry of routine.exercises) assert.ok(byId.has(entry.exerciseId), `${routine.name}: ${entry.exerciseId}`);
   }
   const required = ['crunch', 'leg-raise', 'goblet-squat', 'kettlebell-shoulder-press', 'kettlebell-snatch-catch', 'kettlebell-triceps-extension', 'kettlebell-pushup'];
-  assert.deepEqual(db.filter(item => item.source === 'app').map(item => item.id).sort(), required.sort());
+  assert.deepEqual(db.filter(item => item.source === 'app' && item.equipment !== '불가리안백').map(item => item.id).sort(), required.sort());
   assert.deepEqual(byId.get('kettlebell-swing').wgerIds, [9, 331, 960]);
   assert.deepEqual(byId.get('pistol-squat').wgerIds, [1020]);
   assert.ok(byId.get('kettlebell-curl').wgerIds.includes(975));
@@ -80,4 +80,14 @@ test('checked-in JSON is reproducible with native Node builder and uses LF', () 
   assert.deepEqual(db, regenerated);
   assert.equal(bytes, `[\n${regenerated.map(item => JSON.stringify(item)).join(',\n')}\n]\n`);
   assert.ok(!bytes.includes('\r'));
+});
+
+test('Bulgarian bag entries are app-authored with safe spin and throw cues', () => {
+  const bag = db.filter(item => item.equipment === '불가리안백');
+  assert.ok(bag.length >= 10);
+  for (const item of bag) {
+    assert.equal(item.source, 'app');
+    assert.deepEqual(item.images, []);
+    if (/스핀|스로/.test(item.ko)) assert.ok(item.tips.some(tip => tip.includes('가벼운 무게로 시작, 주변 공간 확보')));
+  }
 });

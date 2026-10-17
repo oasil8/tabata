@@ -166,8 +166,10 @@ export function createMemo({ getData, save, choose, changed }) {
     let category = '전체';
     function resultsFor() {
       const query = search.value.trim().toLocaleLowerCase();
-      const matches = all().filter(item => !getData().hiddenExerciseIds.includes(item.id)
-        && (category === '전체' || item.category === category || item.equipment === category)
+      const candidates = category === '내 종목' ? getData().customExercises : all();
+      const matches = candidates.filter(item => !getData().hiddenExerciseIds.includes(item.id)
+        && (category === '전체' || category === '내 종목'
+          || (['케틀벨', '불가리안백'].includes(category) ? item.equipment === category : item.category === category))
         && `${item.ko} ${item.en || ''}`.toLocaleLowerCase().includes(query));
       results.replaceChildren();
       for (const item of matches) {
@@ -177,11 +179,10 @@ export function createMemo({ getData, save, choose, changed }) {
         results.append(row);
       }
       if (!matches.length) {
-        results.append(el('p', '검색 결과가 없습니다.'));
-        if (query) results.append(button(`'${search.value.trim()}'을(를) 내 종목으로 만들기`, () => editCustom(null, search.value.trim(), item => addExercise(routine, item))));
+        results.append(el('p', category === '내 종목' && !getData().customExercises.length ? '아직 만든 종목이 없어요' : '검색 결과가 없어요'));
       }
     }
-    for (const value of ['전체', '복근', '가슴', '팔', '어깨', '등', '하체', '종아리', '유산소', '스트레칭', '케틀벨']) {
+    for (const value of ['전체', '복근', '가슴', '팔', '어깨', '등', '하체', '종아리', '유산소', '스트레칭', '케틀벨', '불가리안백', '내 종목']) {
       const chip = button(value, () => {
         category = value;
         for (const child of chips.children) child.setAttribute('aria-pressed', String(child === chip));
@@ -192,9 +193,9 @@ export function createMemo({ getData, save, choose, changed }) {
     }
     search.addEventListener('input', resultsFor);
     // 검색에 원하는 종목이 없을 때를 대비해 항상 보이는 직접 추가 버튼. 검색어가 있으면 이름으로 미리 채운다.
-    const direct = button('＋ 목록에 없으면 직접 입력해서 추가', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)));
+    const direct = button('＋ 내 종목 만들기', () => editCustom(null, search.value.trim(), item => addExercise(routine, item)));
     direct.className = 'direct-add';
-    area.append(searchLabel, direct, chips, results);
+    area.append(searchLabel, chips, results, el('p', '찾는 종목이 없으면 직접 만들 수 있어요', 'create-hint'), direct);
     resultsFor();
     view.append(area);
   }
@@ -274,7 +275,9 @@ export function createMemo({ getData, save, choose, changed }) {
     renderSearch(routine);
   }
   function renderManage() {
-    view.append(button('‹ 루틴 목록', () => { screen = 'list'; render(); }), el('h1', '내 종목 관리'), button('＋ 내 종목 만들기', () => editCustom(null)));
+    const direct = button('＋ 내 종목 만들기', () => editCustom(null));
+    direct.className = 'direct-add';
+    view.append(button('‹ 루틴 목록', () => { screen = 'list'; render(); }), el('h1', '내 종목 관리'), direct);
     for (const item of getData().customExercises) {
       const row = el('article', undefined, 'exercise-row');
       const actions = el('div', undefined, 'button-row');
