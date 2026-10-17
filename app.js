@@ -32,6 +32,8 @@ function syncSheets() {
 }
 function showSheet(dialog) {
   if (!dialog.open) dialog.show();
+  // show()가 첫 버튼(취소)에 자동 포커스해 노란 테두리가 생기므로 비운다.
+  document.activeElement?.blur();
   dialog.scrollTop = 0;
   syncSheets();
 }

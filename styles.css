@@ -379,8 +379,10 @@ input {
 }
 
 .number-wrap input {
-  width: 84px;
-  text-align: right;
+  width: 68px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
   font-variant-numeric: tabular-nums;
 }
 
@@ -841,7 +843,7 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 .editor-header h2 { margin: 0; }
 .name-label { margin: 0 0 24px; }
 .field-row small { margin-top: 8px; }
-.number-wrap { gap: 8px; flex-shrink: 0; }
+.number-wrap { gap: 8px; flex-shrink: 0; margin-right: clamp(8px, 5vw, 28px); }
 .backup { margin-top: 24px; padding-top: 24px; }
 .backup h2 { margin: 0 0 12px; }
 .backup p, .choice-dialog p { margin: 12px 0 20px; }
