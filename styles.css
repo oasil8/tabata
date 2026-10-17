@@ -6,6 +6,8 @@
   --yellow: #ffe600;
   --muted: #999;
   --line: #303030;
+  --tabbar-height: 70px;
+  --tabbar-space: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
 }
 
 * {
@@ -229,6 +231,7 @@ h1 {
 }
 
 .tabbar {
+  height: var(--tabbar-space);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -277,6 +280,24 @@ dialog {
 
 dialog::backdrop {
   background: #000b;
+}
+
+#sheet-backdrop {
+  position: fixed;
+  inset: 0 0 var(--tabbar-space);
+  background: #000b;
+  z-index: 4;
+}
+
+dialog.sheet {
+  position: fixed;
+  top: auto;
+  bottom: var(--tabbar-space);
+  margin: 0 auto;
+  max-height: calc(100vh - var(--tabbar-space) - env(safe-area-inset-top) - 12px);
+  max-height: calc(100dvh - var(--tabbar-space) - env(safe-area-inset-top) - 12px);
+  border-radius: 24px 24px 0 0;
+  z-index: 5;
 }
 
 body:has(dialog[open]) {
@@ -741,6 +762,7 @@ dialog, #memo-view { overflow-wrap: anywhere; }
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
+  :root { --tabbar-height: 48px; }
   main { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
   #timer-view {
     height: calc(100vh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom));

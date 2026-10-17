@@ -32,7 +32,8 @@
     <p id="message" class="message" role="status" hidden></p>
   </main>
   <nav class="tabbar" aria-label="주 메뉴"><button id="timer-tab" aria-current="page"><span aria-hidden="true">◷</span>타이머</button><button id="memo-tab"><span aria-hidden="true">☷</span>메모</button></nav>
-  <dialog id="editor" aria-label="루틴 편집">
+  <div id="sheet-backdrop" hidden aria-hidden="true"></div>
+  <dialog id="editor" class="sheet" aria-label="루틴 편집">
     <form id="routine-form" novalidate>
       <header class="editor-header"><button type="button" id="cancel-edit" class="quiet">취소</button><h2>루틴 편집</h2><button type="submit" class="quiet accent">저장</button></header>
       <label class="name-label">루틴 이름<input id="routine-name" maxlength="60" required autocomplete="off"></label>
@@ -46,7 +47,7 @@
   </dialog>
   <dialog id="choice-dialog" class="choice-dialog" aria-labelledby="choice-title"><h2 id="choice-title"></h2><p id="choice-description"></p><div id="choice-actions" class="button-row"></div><button id="choice-cancel" class="wide-button">취소</button></dialog>
   <audio id="workout-audio" preload="auto" playsinline></audio>
-  <dialog id="exercise-detail" aria-label="운동 종목 상세"></dialog>
-  <dialog id="custom-editor" aria-label="내 종목 편집"></dialog>
+  <dialog id="exercise-detail" class="sheet" aria-label="운동 종목 상세"></dialog>
+  <dialog id="custom-editor" class="sheet" aria-label="내 종목 편집"></dialog>
 </body>
 </html>

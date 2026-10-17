@@ -29,7 +29,7 @@ const link = (text, url) => {
   return node;
 };
 
-export function createMemo({ getData, save, choose, changed }) {
+export function createMemo({ getData, save, choose, changed, showSheet }) {
   const view = document.getElementById('memo-view');
   const detail = document.getElementById('exercise-detail');
   const editor = document.getElementById('custom-editor');
@@ -113,7 +113,7 @@ export function createMemo({ getData, save, choose, changed }) {
   function showDetail(id) {
     detail.replaceChildren(button('닫기', () => detail.close()));
     renderDescription(detail, id);
-    if (!detail.open) detail.showModal();
+    showSheet(detail);
   }
   function editCustom(existing, initialName = '', afterSave) {
     editor.replaceChildren();
@@ -145,7 +145,7 @@ export function createMemo({ getData, save, choose, changed }) {
       } catch (error) { status.textContent = error.message; status.hidden = false; }
     });
     editor.append(form);
-    editor.showModal();
+    showSheet(editor);
     name.focus();
   }
   function addExercise(routine, item) {
@@ -321,5 +321,13 @@ export function createMemo({ getData, save, choose, changed }) {
     view.append(info);
   }
   load();
-  return { render, flush, showDetail };
+  function home() {
+    routineId = null;
+    entryId = null;
+    editing = false;
+    screen = 'list';
+    render();
+    view.scrollTop = 0;
+  }
+  return { render, flush, showDetail, home };
 }

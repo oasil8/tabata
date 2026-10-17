@@ -23,7 +23,26 @@ let lastDisplay = '';
 const audio = $('workout-audio');
 const unlockURL = silenceURL();
 const selected = () => data.routines.find(r => r.id === data.selectedId);
-const memo = createMemo({ getData: () => data, save: persist, choose, changed: () => { lastDisplay = ''; draw(); } });
+const memo = createMemo({ getData: () => data, save: persist, choose, showSheet, changed: () => { lastDisplay = ''; draw(); } });
+
+function syncSheets() {
+  const open = [...document.querySelectorAll('.sheet')].some(dialog => dialog.open);
+  document.querySelector('main').inert = open;
+  $('sheet-backdrop').hidden = !open;
+}
+function showSheet(dialog) {
+  if (!dialog.open) dialog.show();
+  dialog.scrollTop = 0;
+  syncSheets();
+}
+for (const dialog of document.querySelectorAll('.sheet')) {
+  dialog.addEventListener('close', syncSheets);
+}
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || $('choice-dialog').open) return;
+  const dialog = [...document.querySelectorAll('.sheet')].find(dialog => dialog.open);
+  if (dialog) { event.preventDefault(); dialog.close(); syncSheets(); }
+});
 
 function message(text, editor = false) {
   const target = $(editor ? 'editor-message' : 'message');
@@ -269,7 +288,7 @@ function renderList() {
     card.append(select, actions); $('routine-list').append(card);
   }
 }
-$('edit-button').addEventListener('click', () => { pause(); fillEditor(selected()); renderList(); $('editor').showModal(); document.activeElement?.blur(); }); // 첫 버튼(취소)에 포커스 테두리가 생기지 않게
+$('edit-button').addEventListener('click', () => { pause(); fillEditor(selected()); renderList(); showSheet($('editor')); });
 $('cancel-edit').addEventListener('click', () => $('editor').close());
 // 저장 = 지금 루틴 수정, 새 타이머 추가 = 입력한 값 그대로 새 루틴으로 저장.
 function saveRoutine(asNew) {
@@ -331,16 +350,22 @@ $('import-file').addEventListener('change', async event => {
   } catch (error) { message(`가져오지 못했습니다. ${error instanceof SyntaxError ? '올바른 JSON 파일이 아닙니다.' : error.message}`, true); }
 });
 function finishImport() { selectRoutine(); fillEditor(selected()); renderList(); memo.render(); persist(); }
+function navigateHome(name) {
+  memo.flush();
+  for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
+  syncSheets();
+  if (name === 'memo') memo.home();
+  for (const tab of ['timer', 'memo']) {
+    $(`${tab}-view`).hidden = tab !== name;
+    if (tab === name) $(`${tab}-tab`).setAttribute('aria-current', 'page');
+    else $(`${tab}-tab`).removeAttribute('aria-current');
+  }
+  window.scrollTo(0, 0);
+  // 탭에 포커스를 주면 노란 테두리가 남으므로 포커스를 비운다.
+  document.activeElement?.blur();
+}
 for (const name of ['timer', 'memo']) {
-  $(`${name}-tab`).addEventListener('click', () => {
-    memo.flush();
-    if (name === 'memo') memo.render();
-    for (const tab of ['timer', 'memo']) {
-      $(`${tab}-view`).hidden = tab !== name;
-      if (tab === name) $(`${tab}-tab`).setAttribute('aria-current', 'page');
-      else $(`${tab}-tab`).removeAttribute('aria-current');
-    }
-  });
+  $(`${name}-tab`).addEventListener('click', () => navigateHome(name));
 }
 selectRoutine();
 message(loaded.error);

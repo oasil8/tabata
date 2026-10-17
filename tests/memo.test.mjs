@@ -10,6 +10,7 @@ class Element {
   addEventListener(name, action) { this.events[name] = action; }
   setAttribute(name, value) { this.attributes[name] = value; }
   showModal() { this.open = true; }
+  show() { this.open = true; }
   close() { this.open = false; }
   focus() {}
   get lastChild() { return this.children.at(-1); }
@@ -32,7 +33,7 @@ test('장비·내 종목 필터와 공통 만들기 버튼', async () => {
     { id: 'fake', ko: '장비 아님', category: '불가리안백', equipment: '맨몸' }
   ] });
   try {
-    createMemo({ getData: () => data, save() {}, changed() {}, choose() {} });
+    const memo = createMemo({ getData: () => data, save() {}, changed() {}, choose() {}, showSheet: dialog => dialog.show() });
     await new Promise(resolve => setImmediate(resolve));
     const view = nodes['memo-view'];
     click(view, data.routines[0].name);
@@ -58,6 +59,16 @@ test('장비·내 종목 필터와 공통 만들기 버튼', async () => {
     data.hiddenExerciseIds.push('bag'); click(view, '불가리안백'); assert.deepEqual(names(), []);
     click(view, '‹ 루틴 목록'); click(view, '내 종목 관리');
     assert.equal(descendants(view).find(node => node.textContent === '＋ 내 종목 만들기').className, 'direct-add');
+    memo.home();
+    assert.ok(descendants(view).some(node => node.textContent === '루틴 메모'));
+    click(view, data.routines[0].name);
+    click(view, '편집');
+    memo.home();
+    click(view, data.routines[0].name);
+    assert.ok(descendants(view).some(node => node.textContent === '편집'));
+    descendants(view).find(node => node.className === 'exercise-entry').events.click();
+    memo.home();
+    assert.ok(descendants(view).some(node => node.textContent === '루틴 메모'));
   } finally { Object.assign(globalThis, original); }
 });
 
@@ -74,7 +85,7 @@ test('메모 목록 → 항목 상세, 자동 저장, 이동·삭제와 이미�
   let saves = 0;
   let confirmation;
   try {
-    const memo = createMemo({ getData: () => data, save: () => saves++, changed() {}, choose: (...args) => { confirmation = args; } });
+    const memo = createMemo({ getData: () => data, save: () => saves++, changed() {}, choose: (...args) => { confirmation = args; }, showSheet: dialog => dialog.show() });
     await new Promise(resolve => setImmediate(resolve));
     const view = nodes['memo-view'];
     click(view, routine.name);

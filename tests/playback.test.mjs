@@ -14,6 +14,8 @@ function app() {
       textContent: '', paused: true, currentTime: 0, dataset: {}, style: {}, events: {},
       classList: { toggle() {} }, append() {}, addEventListener(name, fn) { this.events[name] = fn; },
       removeAttribute(name) { delete this[name]; }, getAttribute(name) { return this[name]; },
+      setAttribute(name, value) { this[name] = value; },
+      show() { this.open = true; }, close() { this.open = false; }, focus() {},
       load() {}, pause() { this.paused = true; this.events.pause?.(); },
       play() { this.paused = false; this.plays = (this.plays || 0) + 1; this.events.play?.(); return Promise.resolve(); },
     });
@@ -23,17 +25,48 @@ function app() {
   const context = vm.createContext({
     ...store, ...timeline, ...caching, sampleRateFor,
     loadData: () => ({ data: store.defaults(), error: '' }), saveData: () => '',
-    document: { getElementById: node, createElement: () => node(Symbol()), addEventListener() {} },
+    document: { getElementById: node, createElement: () => node(Symbol()), addEventListener() {},
+      querySelector: () => node('main'),
+      querySelectorAll: selector => ['editor', 'exercise-detail', 'custom-editor', ...(selector === 'dialog[open]' ? ['choice-dialog'] : [])].map(node).filter(n => selector !== 'dialog[open]' || n.open) },
+    window: { scrollTo() {} },
     navigator: {}, silenceURL: () => 'blob:silent',
     URL: { revokeObjectURL: url => revoked.push(url) },
     requestIdleCallback: fn => idle.push(fn), requestAnimationFrame() {}, cancelAnimationFrame() {},
-    createMemo: () => ({}), exerciseFor: () => null,
+    createMemo: () => ({ render() {}, flush() { node('memo').flushed = true; }, home() { node('memo').home = true; } }), exerciseFor: () => null,
     renderWorkout: segments => new Promise((resolve, reject) => jobs.push({ segments, resolve, reject })),
   });
   vm.runInContext(readFileSync(new URL('../app.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
   return { node, jobs, idle, revoked, run: code => vm.runInContext(code, context) };
 }
 const flush = () => new Promise(resolve => setImmediate(resolve));
+
+test('탭 이동은 모든 창을 닫고 메모를 flush하며 재생을 유지한다', () => {
+  const a = app(), audio = a.node('workout-audio');
+  audio.paused = false; audio.currentTime = 42;
+  for (const name of ['memo', 'memo', 'timer']) {
+    for (const id of ['editor', 'exercise-detail', 'custom-editor', 'choice-dialog']) a.node(id).open = true;
+    a.node(`${name}-tab`).events.click();
+    assert.equal(a.node('memo').flushed, true);
+    for (const id of ['editor', 'exercise-detail', 'custom-editor', 'choice-dialog']) assert.equal(a.node(id).open, false);
+    assert.equal(a.node(`${name}-view`).hidden, false);
+    assert.equal(a.node(`${name}-tab`)['aria-current'], 'page');
+    assert.equal(audio.paused, false);
+    assert.equal(audio.currentTime, 42);
+  }
+  assert.equal(a.node('memo').home, true);
+});
+
+test('큰 창은 비모달로 열리고 본문만 비활성화하며 닫으면 복구한다', () => {
+  const a = app();
+  a.run("showSheet($('editor'))");
+  assert.equal(a.node('editor').open, true);
+  assert.equal(a.node('main').inert, true);
+  assert.equal(a.node('sheet-backdrop').hidden, false);
+  a.node('editor').close();
+  a.node('editor').events.close();
+  assert.equal(a.node('main').inert, false);
+  assert.equal(a.node('sheet-backdrop').hidden, true);
+});
 
 test('첫 화면 이후 사전 렌더링, 동기 재생, 리셋·완료 후 같은 URL 재사용', async () => {
   const a = app(), audio = a.node('workout-audio');
