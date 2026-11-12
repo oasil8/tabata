@@ -71,30 +71,36 @@ export async function renderWorkout(segments) {
   })));
   // TTS의 긴 끝 무음 때문에 1초 카운트 음성이 불필요하게 생략되지 않도록 한다.
   const bounds = Object.fromEntries(keys.map(key => [key, voiceBounds(clips[key].getChannelData(0), rate)]));
-  const context = new Offline(1, Math.ceil((duration + bounds.done.duration + 0.1) * rate), rate);
+  const finishChimeDuration = 0.66;
+  const context = new Offline(1, Math.ceil((duration + Math.max(bounds.done.duration, finishChimeDuration) + 0.1) * rate), rate);
   for (const cue of cuePlan(segments, Object.fromEntries(keys.map(key => [key, bounds[key].duration])))) {
     const source = context.createBufferSource();
     const gain = context.createGain();
-    source.buffer = clips[cue.key]; gain.gain.value = 0.8;
+    source.buffer = clips[cue.key]; gain.gain.value = 1.15;
     source.connect(gain).connect(context.destination);
     source.start(cue.time, bounds[cue.key].offset, bounds[cue.key].duration);
   }
-  const beep = (time, length) => {
+  const beep = (time, length, freq = 880, gainLevel = 0.28) => {
     const oscillator = context.createOscillator();
     const gain = context.createGain();
-    oscillator.frequency.value = 880;
+    oscillator.type = 'sine';
+    oscillator.frequency.value = freq;
     gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(0.12, time + 0.008);
-    gain.gain.setValueAtTime(0.12, time + length - 0.02);
+    gain.gain.linearRampToValueAtTime(gainLevel, time + 0.008);
+    gain.gain.setValueAtTime(gainLevel, time + length - 0.02);
     gain.gain.linearRampToValueAtTime(0, time + length);
     oscillator.connect(gain).connect(context.destination);
     oscillator.start(time); oscillator.stop(time + length);
   };
   for (const s of segments) {
-    beep(s.start, 0.28);
+    // 구간 전환음(운동 ↔ 휴식): 1120Hz, 0.3초, gain 0.5 — 주파수 테스터로 고른 값
+    beep(s.start, 0.3, 1120, 0.5);
     for (let n = Math.min(3, s.duration - 1); n >= 1; n--) beep(s.start + s.duration - n, 0.09);
   }
-  beep(duration, 0.4);
+  // 완료음: 구간 전환음(880Hz 단발)과 또렷이 구분되도록 높은 음 3번을 올림차순으로 재생
+  beep(duration, 0.16, 1760);
+  beep(duration + 0.18, 0.16, 1760);
+  beep(duration + 0.36, finishChimeDuration - 0.36, 2093);
   const rendered = await context.startRendering();
   return URL.createObjectURL(new Blob([encodeWav(rendered.getChannelData(0), rate)], { type: 'audio/wav' }));
 }
