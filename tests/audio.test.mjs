@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cuePlan, sampleRateFor, encodeWav, voiceBounds } from '../audio-render.js';
+import { cuePlan, sampleRateFor, encodeWav, voiceBounds, volumeGain } from '../audio-render.js';
+test('소리 크기 눈금은 0.1=-30dB, 1=0dB이고 0.1마다 같은 dB씩 커진다', () => {
+  const db = level => 20 * Math.log10(volumeGain(level));
+  assert.ok(Math.abs(db(1)) < 1e-9);
+  assert.ok(Math.abs(db(0.1) + 30) < 1e-9);
+  for (let level = 0.1; level < 0.95; level += 0.1) assert.ok(Math.abs(db(level + 0.1) - db(level) - 30 / 9) < 1e-9);
+  // 기본값은 예전 고정 음량(전환음 0.5, 카운트다운 0.28)과 거의 같게 맞춘다.
+  assert.ok(Math.abs(volumeGain(0.8) - 0.5) < 0.05);
+  assert.ok(Math.abs(volumeGain(0.7) - 0.3) < 0.05);
+});
 test('TTS 앞뒤 무음을 제외하고 음성 양쪽에 여유를 남긴다', () => {
   const samples = new Float32Array(1000);
   samples.fill(0.2, 200, 500);

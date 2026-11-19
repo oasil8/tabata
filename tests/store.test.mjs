@@ -19,10 +19,10 @@ test('routine validation retains notes and memo and rejects invalid types and li
 });
 test('beep volumes default for old data, accept 0.1~1 and reject everything else', () => {
   const { switchVolume, countdownVolume, ...old } = store.defaults().routines[0];
-  assert.deepEqual([switchVolume, countdownVolume], [0.5, 0.3]);
+  assert.deepEqual([switchVolume, countdownVolume], [0.8, 0.7]);
   const filled = store.validateRoutine(old);
-  assert.equal(filled.switchVolume, 0.5);
-  assert.equal(filled.countdownVolume, 0.3);
+  assert.equal(filled.switchVolume, 0.8);
+  assert.equal(filled.countdownVolume, 0.7);
   const loud = store.validateRoutine({ ...old, switchVolume: 1, countdownVolume: 0.1 });
   assert.deepEqual([loud.switchVolume, loud.countdownVolume], [1, 0.1]);
   assert.equal(store.validateRoutine({ ...old, switchVolume: 0.7000000001 }).switchVolume, 0.7);

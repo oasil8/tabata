@@ -12,6 +12,13 @@ export function voiceBounds(samples, rate) {
   return { offset: start / rate, duration: (end - start) / rate };
 }
 
+// 편집 화면의 크기(0.1~1)를 귀가 느끼는 크기에 맞춰 실제 음량으로 바꾼다.
+// 0.1 = -30dB(거의 안 들림), 1 = 0dB(최대). 0.1씩 올릴 때마다 약 3.3dB씩 고르게 커진다.
+const MIN_DB = -30;
+export function volumeGain(level) {
+  return 10 ** (MIN_DB * (1 - level) / 0.9 / 20);
+}
+
 export function sampleRateFor(seconds) {
   if (!Number.isFinite(seconds) || seconds <= 0 || seconds > 7200) throw new Error('오디오 생성은 최대 120분까지 가능합니다. 루틴 길이를 줄여 주세요.');
   // 40분: 8kHz 모노 Float32 77MB + PCM16 38MB. Blob/디코더 복사도 있어 상한 120분.
@@ -96,11 +103,12 @@ export async function renderWorkout(segments, volumes = {}) {
     oscillator.start(time); oscillator.stop(time + length);
   };
   for (const s of segments) {
-    // 구간 전환음(운동 ↔ 휴식): 1120Hz, 0.3초 — 주파수 테스터로 고른 값. 크기는 루틴 편집에서 정한다(기본 0.5).
-    beep(s.start, 0.3, 1120, volumes.switch ?? 0.5);
-    for (let n = Math.min(3, s.duration - 1); n >= 1; n--) beep(s.start + s.duration - n, 0.09, 880, volumes.countdown ?? 0.3);
+    // 휴대폰 스피커와 사람 귀가 잘 듣는 2~3kHz 대역을 쓴다(예전 1120Hz·880Hz보다 같은 크기에서 더 크게 들림).
+    // 구간 전환음 2500Hz 0.3초, 카운트다운 2000Hz 0.09초. 크기는 루틴 편집에서 정한다(기본 0.8, 0.7).
+    beep(s.start, 0.3, 2500, volumeGain(volumes.switch ?? 0.8));
+    for (let n = Math.min(3, s.duration - 1); n >= 1; n--) beep(s.start + s.duration - n, 0.09, 2000, volumeGain(volumes.countdown ?? 0.7));
   }
-  // 완료음: 구간 전환음(880Hz 단발)과 또렷이 구분되도록 높은 음 3번을 올림차순으로 재생
+  // 완료음: 단발인 전환음·카운트다운과 또렷이 구분되도록 음 3번을 올림차순으로 재생(크기 고정 0.28)
   beep(duration, 0.16, 1760);
   beep(duration + 0.18, 0.16, 1760);
   beep(duration + 0.36, finishChimeDuration - 0.36, 2093);

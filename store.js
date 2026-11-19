@@ -8,10 +8,10 @@ export const fields = [
   ['cycleRest', '사이클 사이 휴식', '다음 사이클 전에 쉬는 시간', 0, 3600],
   ['cooldown', '쿨다운', '모든 운동 후 마무리하는 시간', 0, 3600],
 ];
-// 삐 소리 크기(0.1~1). 이 값이 없는 예전 저장 데이터·백업은 기본값으로 채운다.
+// 삐 소리 크기(0.1~1, 귀 기준 눈금 — audio-render.js의 volumeGain). 이 값이 없는 예전 저장 데이터·백업은 기본값으로 채운다.
 export const volumeFields = [
-  ['switchVolume', '전환음 크기', '구간이 바뀔 때 나는 삐- 소리', 0.1, 1, 0.5],
-  ['countdownVolume', '카운트다운 크기', '구간이 끝나기 3초 전부터 나는 삐 소리', 0.1, 1, 0.3],
+  ['switchVolume', '전환음 크기', '구간이 바뀔 때 나는 삐- 소리', 0.1, 1, 0.8],
+  ['countdownVolume', '카운트다운 크기', '구간이 끝나기 3초 전부터 나는 삐 소리', 0.1, 1, 0.7],
 ];
 const defaultVolumes = () => Object.fromEntries(volumeFields.map(([key, , , , , value]) => [key, value]));
 
