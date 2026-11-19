@@ -18,10 +18,13 @@ export function sampleRateFor(seconds) {
   return seconds <= 1200 ? 16000 : 8000;
 }
 
+// 준비·운동·휴식은 시작 음성 없이 전환음(삐-)만 낸다. 음성 파일은 남겨 두어 다시 켜기 쉽게 한다.
+const silentStarts = new Set(['prepare', 'work', 'rest']);
+
 export function cuePlan(segments, durations) {
   const candidates = [];
   for (const s of segments) {
-    candidates.push({ key: s.type, time: s.start, priority: 0, end: s.start + s.duration });
+    if (!silentStarts.has(s.type)) candidates.push({ key: s.type, time: s.start, priority: 0, end: s.start + s.duration });
     for (let n = Math.min(3, s.duration); n >= 1; n--) {
       candidates.push({ key: ['one', 'two', 'three'][n - 1], time: s.start + s.duration - n, priority: 1, end: s.start + s.duration });
     }
@@ -58,7 +61,7 @@ export function silenceURL() {
   return URL.createObjectURL(new Blob([encodeWav(new Float32Array(8000), 8000)], { type: 'audio/wav' }));
 }
 
-export async function renderWorkout(segments) {
+export async function renderWorkout(segments, volumes = {}) {
   const duration = totalDuration(segments);
   const rate = sampleRateFor(duration);
   const Offline = globalThis.OfflineAudioContext || globalThis.webkitOfflineAudioContext;
@@ -93,9 +96,9 @@ export async function renderWorkout(segments) {
     oscillator.start(time); oscillator.stop(time + length);
   };
   for (const s of segments) {
-    // 구간 전환음(운동 ↔ 휴식): 1120Hz, 0.3초, gain 0.5 — 주파수 테스터로 고른 값
-    beep(s.start, 0.3, 1120, 0.5);
-    for (let n = Math.min(3, s.duration - 1); n >= 1; n--) beep(s.start + s.duration - n, 0.09);
+    // 구간 전환음(운동 ↔ 휴식): 1120Hz, 0.3초 — 주파수 테스터로 고른 값. 크기는 루틴 편집에서 정한다(기본 0.5).
+    beep(s.start, 0.3, 1120, volumes.switch ?? 0.5);
+    for (let n = Math.min(3, s.duration - 1); n >= 1; n--) beep(s.start + s.duration - n, 0.09, 880, volumes.countdown ?? 0.3);
   }
   // 완료음: 구간 전환음(880Hz 단발)과 또렷이 구분되도록 높은 음 3번을 올림차순으로 재생
   beep(duration, 0.16, 1760);

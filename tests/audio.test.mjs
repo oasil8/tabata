@@ -13,6 +13,14 @@ test('음성은 중첩되지 않고 종료 음성도 포함한다', () => {
   assert.equal(cues.at(-1).key, 'done');
   assert.equal(cues.at(-1).time, 5);
 });
+test('준비·운동·휴식은 시작 음성을 넣지 않고 카운트다운·쿨다운·종료 음성은 남긴다', () => {
+  const durations = Object.fromEntries(['prepare', 'work', 'rest', 'cycle_rest', 'cooldown', 'done', 'three', 'two', 'one'].map(k => [k, 0.5]));
+  const segments = [{ type: 'prepare', start: 0, duration: 5 }, { type: 'work', start: 5, duration: 5 }, { type: 'rest', start: 10, duration: 5 }, { type: 'cycle_rest', start: 15, duration: 5 }, { type: 'cooldown', start: 20, duration: 5 }];
+  const keys = cuePlan(segments, durations).map(c => c.key);
+  for (const key of ['prepare', 'work', 'rest']) assert.ok(!keys.includes(key));
+  for (const key of ['cycle_rest', 'cooldown', 'done', 'three', 'two', 'one']) assert.ok(keys.includes(key));
+  assert.equal(keys.filter(k => k === 'three').length, 5);
+});
 test('40분 렌더링 메모리 제한과 과도한 길이 거부', () => {
   assert.equal(sampleRateFor(2400), 8000);
   assert.throws(() => sampleRateFor(7201));

@@ -8,16 +8,22 @@ export const fields = [
   ['cycleRest', '사이클 사이 휴식', '다음 사이클 전에 쉬는 시간', 0, 3600],
   ['cooldown', '쿨다운', '모든 운동 후 마무리하는 시간', 0, 3600],
 ];
+// 삐 소리 크기(0.1~1). 이 값이 없는 예전 저장 데이터·백업은 기본값으로 채운다.
+export const volumeFields = [
+  ['switchVolume', '전환음 크기', '구간이 바뀔 때 나는 삐- 소리', 0.1, 1, 0.5],
+  ['countdownVolume', '카운트다운 크기', '구간이 끝나기 3초 전부터 나는 삐 소리', 0.1, 1, 0.3],
+];
+const defaultVolumes = () => Object.fromEntries(volumeFields.map(([key, , , , , value]) => [key, value]));
 
 const emptyData = () => ({ version: 1, seeded: true, selectedId: null, routines: [], customExercises: [], hiddenExerciseIds: [] });
 const entries = (prefix, values) => values.map(([name, exerciseId], i) => ({ id: `${prefix}-${i + 1}`, name, exerciseId, note: '' }));
 
 export function defaults() {
   return { ...emptyData(), selectedId: 'abs', routines: [
-    { id: 'abs', name: '매일 복근', prepare: 10, work: 20, rest: 10, rounds: 8, cycles: 1, cycleRest: 1, cooldown: 1, memo: '', exercises: entries('abs', [
+    { id: 'abs', name: '매일 복근', prepare: 10, work: 20, rest: 10, rounds: 8, cycles: 1, cycleRest: 1, cooldown: 1, ...defaultVolumes(), memo: '', exercises: entries('abs', [
       ['크런치', 'crunch'], ['바이시클 크런치', 'bicycle-crunch'], ['레그 레이즈', 'leg-raise'], ['힐 터치', 'heel-touch'],
     ]) },
-    { id: 'kb', name: 'KB전신운동', prepare: 15, work: 40, rest: 20, rounds: 10, cycles: 2, cycleRest: 1, cooldown: 1, memo: '', exercises: entries('kb', [
+    { id: 'kb', name: 'KB전신운동', prepare: 15, work: 40, rest: 20, rounds: 10, cycles: 2, cycleRest: 1, cooldown: 1, ...defaultVolumes(), memo: '', exercises: entries('kb', [
       ['스윙', 'kettlebell-swing'], ['스쿼트', 'goblet-squat'], ['싱글렉 스쿼트', 'pistol-squat'], ['싱글렉 스쿼트', 'pistol-squat'],
       ['싱글 암 숄더 프레스', 'kettlebell-shoulder-press'], ['싱글 암 숄더 프레스', 'kettlebell-shoulder-press'],
       ['KB 스내치 & 캐치', 'kettlebell-snatch-catch'], ['이두컬', 'kettlebell-curl'],
@@ -60,6 +66,11 @@ export function validateRoutine(value) {
   for (const [key, label, , min, max] of fields) {
     if (!Number.isInteger(value[key]) || value[key] < min || value[key] > max) throw new Error(`${label}: ${min}~${max} 범위의 정수를 입력하세요.`);
     result[key] = value[key];
+  }
+  for (const [key, label, , min, max, fallback] of volumeFields) {
+    const volume = value[key] === undefined ? fallback : value[key];
+    if (typeof volume !== 'number' || !Number.isFinite(volume) || volume < min || volume > max) throw new Error(`${label}: ${min}~${max} 범위의 숫자를 입력하세요.`);
+    result[key] = Math.round(volume * 100) / 100;
   }
   return result;
 }

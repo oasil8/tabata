@@ -1,5 +1,5 @@
 import { buildSegments, totalDuration, positionAt } from './segments.js';
-import { defaults, fields, loadData, saveData, validateData, validateRoutine, mergeData } from './store.js';
+import { defaults, fields, volumeFields, loadData, saveData, validateData, validateRoutine, mergeData } from './store.js';
 import { renderWorkout, silenceURL, sampleRateFor } from './audio-render.js';
 import { audioKey, selectAudio, finishAudio } from './audio-cache.js';
 import { exerciseFor } from './exercise-display.js';
@@ -174,7 +174,8 @@ async function prepareAudio() {
     while (cache.key && !cache.url) {
       const version = cache.version;
       try {
-        const url = await renderWorkout(segments);
+        const routine = selected();
+        const url = await renderWorkout(segments, { switch: routine?.switchVolume, countdown: routine?.countdownVolume });
         const result = finishAudio(cache, version, url);
         cache = result.cache;
         if (result.revoke) URL.revokeObjectURL(result.revoke);
@@ -222,7 +223,8 @@ if ('mediaSession' in navigator) {
   }
 }
 
-for (const [key, label, description, min, max] of fields) {
+// 시간 필드는 정수(초·개), 소리 크기는 0.1 단위 소수로 입력한다.
+for (const [key, label, description, min, max, volume] of [...fields, ...volumeFields]) {
   const row = document.createElement('div');
   row.className = 'field-row';
   const fieldLabel = document.createElement('label');
@@ -230,8 +232,8 @@ for (const [key, label, description, min, max] of fields) {
   const small = document.createElement('small'); small.textContent = description; fieldLabel.append(small);
   const wrap = document.createElement('div'); wrap.className = 'number-wrap';
   const input = document.createElement('input');
-  Object.assign(input, { id: `field-${key}`, name: key, type: 'number', inputMode: 'numeric', min, max, step: 1, required: true });
-  const unit = document.createElement('span'); unit.textContent = key === 'rounds' || key === 'cycles' ? '개' : '초';
+  Object.assign(input, { id: `field-${key}`, name: key, type: 'number', inputMode: volume === undefined ? 'numeric' : 'decimal', min, max, step: volume === undefined ? 1 : 0.1, required: true });
+  const unit = document.createElement('span'); unit.textContent = volume !== undefined ? '' : key === 'rounds' || key === 'cycles' ? '개' : '초';
   wrap.append(input, unit); row.append(fieldLabel, wrap);
   $('fields').append(row);
 }
@@ -239,7 +241,7 @@ function fillEditor(routine) {
   editingId = routine?.id || null;
   const values = routine || { ...defaults().routines[0], name: '' };
   $('routine-name').value = values.name;
-  for (const [key] of fields) $(`field-${key}`).value = values[key];
+  for (const [key] of [...fields, ...volumeFields]) $(`field-${key}`).value = values[key];
   message('', true);
 }
 function button(text, action, className = '') {
@@ -306,7 +308,7 @@ function saveRoutine(asNew) {
     memo.flush();
     const previous = data.routines.find(r => r.id === id);
     const value = { id: id || crypto.randomUUID(), name, exercises: previous?.exercises || [], memo: previous?.memo || '' };
-    for (const [key] of fields) value[key] = $(`field-${key}`).value.trim() === '' ? NaN : Number($(`field-${key}`).value);
+    for (const [key] of [...fields, ...volumeFields]) value[key] = $(`field-${key}`).value.trim() === '' ? NaN : Number($(`field-${key}`).value);
     const routine = validateRoutine(value);
     if (id) data.routines = data.routines.map(r => r.id === id ? routine : r);
     else data.routines.push(routine);

@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { audioKey, selectAudio, finishAudio } from '../audio-cache.js';
 
-test('오디오 캐시는 시간 필드만 비교하고 오래된 결과를 폐기한다', () => {
-  const routine = { prepare: 10, work: 20, rest: 10, rounds: 8, cycles: 1, cycleRest: 60, cooldown: 10 };
+test('오디오 캐시는 시간·소리 크기 필드만 비교하고 오래된 결과를 폐기한다', () => {
+  const routine = { prepare: 10, work: 20, rest: 10, rounds: 8, cycles: 1, cycleRest: 60, cooldown: 10, switchVolume: 0.5, countdownVolume: 0.3 };
   const key = audioKey(routine);
   assert.equal(audioKey({ ...routine, name: '변경', exercises: ['새 종목'], memo: '메모' }), key);
   for (const field of Object.keys(routine)) assert.notEqual(audioKey({ ...routine, [field]: routine[field] + 1 }), key);

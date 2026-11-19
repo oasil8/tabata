@@ -17,6 +17,20 @@ test('routine validation retains notes and memo and rejects invalid types and li
   assert.deepEqual(store.validateRoutine(routine), routine);
   for (const change of [{ work: 0 }, { rounds: 1.5 }, { memo: 'a'.repeat(2001) }, { memo: null }, { exercises: ['x'] }, { exercises: [routine.exercises[0], routine.exercises[0]] }, { exercises: [{ ...routine.exercises[0], note: 'a'.repeat(201) }] }, { exercises: [{ ...routine.exercises[0], exerciseId: 1 }] }]) assert.throws(() => store.validateRoutine({ ...routine, ...change }));
 });
+test('beep volumes default for old data, accept 0.1~1 and reject everything else', () => {
+  const { switchVolume, countdownVolume, ...old } = store.defaults().routines[0];
+  assert.deepEqual([switchVolume, countdownVolume], [0.5, 0.3]);
+  const filled = store.validateRoutine(old);
+  assert.equal(filled.switchVolume, 0.5);
+  assert.equal(filled.countdownVolume, 0.3);
+  const loud = store.validateRoutine({ ...old, switchVolume: 1, countdownVolume: 0.1 });
+  assert.deepEqual([loud.switchVolume, loud.countdownVolume], [1, 0.1]);
+  assert.equal(store.validateRoutine({ ...old, switchVolume: 0.7000000001 }).switchVolume, 0.7);
+  for (const bad of [0, 0.09, 1.01, NaN, Infinity, '0.5', null]) {
+    assert.throws(() => store.validateRoutine({ ...old, switchVolume: bad }));
+    assert.throws(() => store.validateRoutine({ ...old, countdownVolume: bad }));
+  }
+});
 test('custom URL, type, duplicate and dangling custom reference validation', () => {
   const data = { ...empty(), customExercises: [custom()] };
   assert.deepEqual(store.validateData(data), data);
